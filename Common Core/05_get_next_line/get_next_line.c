@@ -108,27 +108,31 @@ char	*get_next_line(int fd)
 	nl_index = find_newline(storage);
 	return (extract_line(&storage, nl_index));
 }
-/*
+
 #include <fcntl.h>
 #include <stdio.h>
 
-int main(void)
+int	main(int argc, char **argv)
 {
-	int fd;
-	char *line;
+	int		fd;
+	char	*line;
 
-	fd = open("text.txt", O_RDONLY);
-	line = get_next_line(fd);
-//  -one line check-
-//	printf("line: %s", line);
-//	free(line);
+	if (argc != 2)
+	{
+		printf("note21t: Usage: %s <filename>\n", argv[0]);
+		return (1);
+	}
+	fd = open(argv[1], O_RDONLY);
+	if (fd < 0)
+	{
+		perror("Error opening file");
+		return (1);
+	}
 	while ((line = get_next_line(fd)) != NULL)
 	{
-
-		printf("line: %s", line);
+		printf("%s", line);
 		free(line);
 	}
-
 	close(fd);
 	return (0);
-}*/
+}
