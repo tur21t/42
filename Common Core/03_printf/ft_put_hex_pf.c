@@ -1,24 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
+/*   ft_put_hex_pf.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dmtur <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/13 20:10:48 by dmtur             #+#    #+#             */
-/*   Updated: 2025/07/28 21:29:26 by dmtur            ###   ########.fr       */
+/*   Created: 2025/10/14 13:40:33 by dmtur             #+#    #+#             */
+/*   Updated: 2025/10/15 13:34:58 by dmtur            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "unistd.h"
+#include "ft_printf.h"
 
-void	ft_putchar_fd(char c, int fd)
+void	ft_put_hex_pf(unsigned int n, size_t *counter, int uppercase)
 {
-	write(fd, &c, 1);
+	char	*symbols;
+
+	if (uppercase)
+		symbols = "0123456789ABCDEF";
+	else
+		symbols = "0123456789abcdef";
+	if (n >= 16)
+		ft_put_hex_pf(n / 16, counter, uppercase);
+	ft_putchar_pf(symbols[n % 16], counter);
 }
-/*
-int	main(void)
-{
-	ft_putchar_fd('t', 1);
-	return (0);
-}*/

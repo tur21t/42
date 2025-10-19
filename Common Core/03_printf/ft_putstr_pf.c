@@ -1,24 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
+/*   ft_putstr_pf.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dmtur <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/13 20:10:48 by dmtur             #+#    #+#             */
-/*   Updated: 2025/07/28 21:29:26 by dmtur            ###   ########.fr       */
+/*   Created: 2025/06/13 21:29:42 by dmtur             #+#    #+#             */
+/*   Updated: 2025/10/12 16:59:05 by dmtur            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "unistd.h"
+#include "ft_printf.h"
 
-void	ft_putchar_fd(char c, int fd)
+void	ft_putstr_pf(char *s, size_t *counter)
 {
-	write(fd, &c, 1);
+	size_t	i;
+
+	if (s == NULL)
+		s = "(null)";
+	i = 0;
+	while (s[i] != '\0')
+	{
+		ft_putchar_pf(s[i], counter);
+		i++;
+	}
 }
-/*
-int	main(void)
-{
-	ft_putchar_fd('t', 1);
-	return (0);
-}*/
