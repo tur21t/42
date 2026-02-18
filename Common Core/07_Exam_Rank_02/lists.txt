@@ -1,0 +1,104 @@
+#ifndef FT_LIST_H
+#define FT_LIST_H
+
+typedef struct s_list
+{
+	struct s_list *next;
+	void	*data;
+} t_list;
+
+#endif
+_____
+
+int	ft_list_size(t_list *begin_list)
+{
+	int	i = 0;
+	while(begin_list){
+		begin_list= begin_list->next;
+		i++;
+	}
+	return (i);
+}
+
+_____
+
+void ft_list_foreach(t_list *begin_list, void (*f)(void *))
+{
+	while(begin_list)
+	{
+		f(begin_list->data);
+		begin_list = begin_list->next;
+	}
+}
+
+______________
+
+#include "list.h"
+#include <stdlib.h>
+
+void	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)())
+{
+	t_list *current;
+	t_list *prev;
+
+	if (!begin_list || !*begin_list)
+		return;
+
+	current = *begin_list;
+	prev = NULL;
+
+	while (current)
+	{
+		if ((*cmp)(current->data, data_ref) == 0)
+		{
+			if (prev == NULL)
+				*begin_list = current->next;
+			else
+				prev->next = current->next;
+
+			t_list *temp = current;
+			current = current->next;
+			free(temp);
+		}
+		else
+		{
+			prev = current;
+			current = current->next;
+		}
+	}
+}
+
+_____________
+
+#include "list.h"
+
+t_list *sort_list(t_list *lst, int (*cmp)(int, int))
+{
+	t_list *current;
+	int swapped;
+	int temp;
+
+	if (!lst)
+		return (NULL);
+
+	swapped = 1;
+	while (swapped)
+	{
+		swapped = 0;
+		current = lst;
+		while (current->next)
+		{
+			if ((*cmp)((int)current->data, (int)current->next->data) == 0)
+			{
+				temp = (int)current->data;
+				current->data = current->next->data;
+				current->next->data = (void *)temp;
+				swapped = 1;
+			}
+			current = current->next;
+		}
+	}
+	return (lst);
+}
+
+

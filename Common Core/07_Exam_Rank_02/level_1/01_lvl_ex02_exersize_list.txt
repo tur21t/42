@@ -1,0 +1,73 @@
+01 + ft_swap,
+02 + ft_putstr,
+03 - ft_strlen
+04 - ft_strcpy
+05 -
+06 -
+07 -
+08 -
+09 -
+10 -
+11 -
+12 -
+
+
+
+
+
+- 01 -
+Assignment name  : ft_swap
+Expected files   : ft_swap.c
+Allowed functions:
+--------------------------------------------------------------------------------
+
+Write a function that swaps the contents of two integers the adresses of which
+are passed as parameters.
+
+Your function must be declared as follows:
+
+void	ft_swap(int *a, int *b);
+
+
+- 02 -
+Assignment name  : ft_putstr
+Expected files   : ft_putstr.c
+Allowed functions: write
+--------------------------------------------------------------------------------
+
+Write a function that displays a string on the standard output.
+
+The pointer passed to the function contains the address of the string's first
+character.
+
+Your function must be declared as follows:
+
+void	ft_putstr(char *str);
+
+
+- 03 -
+Assignment name  : ft_strlen
+Expected files   : ft_strlen.c
+Allowed functions: 
+--------------------------------------------------------------------------------
+
+Write a function that returns the length of a string.
+
+Your function must be declared as follows:
+
+int	ft_strlen(char *str);
+
+
+- 04 -
+Reproduce the behavior of the function strcpy (man strcpy).
+
+Your function must be declared as follows:
+
+char    *ft_strcpy(char *s1, char *s2);
+
+
+- 05 -
+- 06 -
+- 07 -
+- 08 -
+
