@@ -6,7 +6,7 @@
 /*   By: dmtur <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 20:23:39 by dmtur             #+#    #+#             */
-/*   Updated: 2026/02/10 21:02:55 by dmtur            ###   ########.fr       */
+/*   Updated: 2026/02/19 14:41:08 by dmtur            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,11 @@ int	ft_list_size(t_list *begin_list)
 	return (i);
 }
 
-void	ft_list_foreach()
+void	ft_list_foreach(t_list *begin_list, void (*f)(void *))
+{
+	while (begin_list)
+	{
+		f(begin_list->data);
+		begin_list = begin_list->next;
+	}
+}

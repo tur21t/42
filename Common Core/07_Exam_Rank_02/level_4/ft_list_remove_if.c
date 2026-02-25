@@ -6,46 +6,22 @@
 /*   By: dmtur <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 19:36:11 by dmtur             #+#    #+#             */
-/*   Updated: 2026/02/16 21:16:14 by dmtur            ###   ########.fr       */
+/*   Updated: 2026/02/25 13:41:17 by dmtur            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "unistd.h"
+#include "ft_list.h"
 #include <stdlib.h>
 
 void	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)())
 {
-	t_list	*curr;
-	t_list	*prev;
-
-	if (!begin_list || !*begin_list)
-		return ;
-
-	while (*begin_list && cmp((*begin_list)->data, data_ref) == 0)
-	{
-		curr = *begin_list;
-		*begin_list = (*begin_list)->next;
-		free(curr);
-	}
-	prev = *begin_list;
-	if (!prev)
-		return ;
-	curr = prev->next;
+	t_list *curr = (*begin_list);
 	while (curr)
 	{
-		if (cmp(curr->data, data_ref) == 0)
-		{
-			prev->next = curr->next;
-			free(curr);
-			curr = prev->next;
-		}
-		else
-		{
-			prev = curr;
-			curr = curr->next;
-		}
+		if (cmp(data_ref, curr->data))
+			free(curr->data);
+		curr = curr->next;
 	}
-
 }
 /*Assignment name  : ft_list_remove_if
 Expected files   : ft_list_remove_if.c
