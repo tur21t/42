@@ -6,7 +6,7 @@
 /*   By: dmtur <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 21:18:35 by dmtur             #+#    #+#             */
-/*   Updated: 2026/02/25 21:12:17 by dmtur            ###   ########.fr       */
+/*   Updated: 2026/02/27 22:09:15 by dmtur            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int main(void)
     char **words;
     int i = 0;
 
-    words = ft_split("   hello   world\t42  school   ");
+    words = ft_split("   Namo   Tara\t21  Tam   ");
 
     while (words[i])
     {
