@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exam02_tmp.c                                       :+:      :+:    :+:   */
+/*   rostring.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dmtur <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,71 +11,78 @@
 /* ************************************************************************** */
  
 #include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
 
-int	main(int ac, char **av)
+int     main(int ac, char **av)
 {
-	if (ac > 1)
-	{
-		int	start = 0;
-		while (av[1][start] && (av[1][start] == ' ' || (av[1][start] >= '\t' && av[1][start] <= '\r')))
-		{	
-			start++;
-	
-		}
-		int end = start;
-		while (av[1][end] && av[1][end] != ' ' && !(av[1][end] >= '\t' && av[1][end] <= '\r'))
-			end++;
+        if(ac >= 2)
+        {
+                char    *s = av[1];
+                int     i = 0;
 
-		
-		int	first_word_length = end - start;
-		char	*first_word = malloc(first_word_length + 1);
-		if (!first_word)
-		{
-			write(1, "\n", 1);
-			return (0);
-		}
-
-		int	j = 0;
-		while (j < first_word_length)
-		{
-			first_word[j] = av[1][start +j];
-			j++;
-		}
-		first_word[j] = '\0';
-
-		
-		int	is_not_space = 1;
-		int	first_word_printed = 0;
-		int	i = end;
-		while (av[1][i])		
-		{
-			if (av[1][i] == ' ' || (av[1][i] >= '\t' && av[1][i] <= '\r'))
-			{
-				is_not_space = 0;			
-			} else 
-			{
-				if (is_not_space == 0 && first_word_printed == 1)
-					write(1, " ", 1);
-				is_not_space = 1;
-				first_word_printed = 1;
-				write(1, &av[1][i], 1);
-			}
-			i++;
-		}
-
-		if (first_word_printed)
-			write(1, " t", 2);
-		
-		j = 0;
-		while (first_word[j])
-		{
-			write(1, &first_word[j], 1);
-				j++;
-		}
-		free(first_word);
-	}
-	write(1, "\n", 1);
-	return (0);
+                while (s[i] == ' ' || s[i] == '\t')
+                        i++;
+                while (s[i] != '\0' && s[i] != ' ' && s[i] != '\t')
+                        i++;
+                while (s[i] == ' ' || s[i] == '\t')
+                        i++;    
+                while (s[i] != '\0')
+                {       
+                        while (s[i] != ' ' && s[i] != '\t' && s[i] != '\0')
+                        {
+                                write(1, &s[i], 1);
+                                i++;
+                        }
+                        while (s[i] == ' ' || s[i] == '\t')
+                        {
+                                i++;    
+                        }
+                        write(1, " ", 1);
+                }
+                i = 0;
+                while (s[i] == ' ' || s[i] == '\t')
+                        i++;
+                while (s[i] != '\0' && s[i] != ' ' && s[i] != '\t')
+                {
+                        write(1, &s[i], 1);
+                        i++;
+                }
+        }
+        write(1, "\n", 1);
+        return (0);
 }
+/*
+Assignment name  : rostring
+Expected files   : rostring.c
+Allowed functions: write, malloc, free
+--------------------------------------------------------------------------------
+
+Write a program that takes a string and displays this string after rotating it
+one word to the left.
+
+Thus, the first word becomes the last, and others stay in the same order.
+
+A "word" is defined as a part of a string delimited either by spaces/tabs, or
+by the start/end of the string.
+
+Words will be separated by only one space in the output.
+
+If there's less than one argument, the program displays \n.
+
+Example:
+
+$>./rostring "abc   " | cat -e
+abc$
+$>
+$>./rostring "Que la      lumiere soit et la lumiere fut"
+la lumiere soit et la lumiere fut Que
+$>
+$>./rostring "     AkjhZ zLKIJz , 23y"
+zLKIJz , 23y AkjhZ
+$>
+$>./rostring "first" "2" "11000000"
+first
+$>
+$>./rostring | cat -e
+$
+$>
+*/
