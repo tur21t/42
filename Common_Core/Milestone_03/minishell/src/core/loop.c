@@ -25,7 +25,7 @@ static void	handle_input(char *input, t_shell *shell)
 	if (check_syntax(tokens))
 	{
 		t_cmd *cmds = parse_tokens(tokens);
-		execute(cmds, shell->env);
+		execute(shell, cmds);
 		print_cmds(cmds);
 		free_cmds(cmds);
 	}
@@ -48,14 +48,14 @@ void	shell_loop(t_shell *shell)
 		if (g_signal == SIGINT)
 		{
 			g_signal = 0;
-			free(input); // if needed
-			continue;    // show prompt again
+			free(input);// if needed
+			continue;// show prompt again
 		}
 		if (!input)
 			handle_input(NULL, shell);
 		line = ft_strdup(input);
 		free(input);
-	while ((quote = get_unclosed_quote(line)))
+		while ((quote = get_unclosed_quote(line)))
 		{
 			input = readline("> ");
 			if (!input)

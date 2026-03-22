@@ -12,10 +12,10 @@ SRCS        = src/core/main.c src/core/loop.c \
 			  src/init/tubs.c \
 			  src/parser/parser.c src/parser/parser_support.c src/parser/parser_support02.c \
 			  src/exec/exec.c src/exec/exec_external_commands.c \
-			  #src/init/ \
-			  #src/builtins/ \
-			  #src/utils/ \
-			  #src/redirections/ 
+			  src/utils/free.c \
+			  src/builtins/exec_builtin.c src/builtins/pwd.c \
+			  #src/redirections/ \
+			  #src/expansion \
 
 OBJS        = $(SRCS:.c=.o)
 

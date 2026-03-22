@@ -1,29 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dfrincu <dfrincu@student.42barcelona.      +#+  +:+       +#+        */
+/*   By: dmtur <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/16 13:21:27 by dfrincu           #+#    #+#             */
-/*   Updated: 2026/03/16 13:21:28 by dfrincu          ###   ########.fr       */
+/*   Created: 2026/03/22 16:02:29 by dmtur             #+#    #+#             */
+/*   Updated: 2026/03/22 16:02:37 by dmtur            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	execute(t_shell *shell, t_cmd *cmds)
+int	builtin_pwd(void)
 {
-	while (cmds)
+	char	cwd[PATH_MAX];
+
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
-		if (is_builtin(cmds->args[0]))
-		{
-			exec_builtin(shell, cmds);
-		}
-		else
-		{
-			exec_external_command(cmds, shell->env);
-		}
-		cmds = cmds->next;
+		perror("pwd");
+		return (1);
 	}
+	printf("%s\n", cwd);
+	return (0);
 }

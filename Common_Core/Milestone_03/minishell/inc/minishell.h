@@ -10,23 +10,25 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#define _XOPEN_SOURCE 700
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
 /* ===================== LIBRARIES ===================== */
 
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <stdbool.h>
-# include <fcntl.h>
-# include <signal.h>
-# include <dirent.h>
-# include <sys/wait.h>
-# include <sys/stat.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include "../libft/libft.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdbool.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <dirent.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+#include "../libft/libft.h"
+#include <limits.h> 
 
 /* ===================== GLOBAL ===================== */
 
@@ -104,23 +106,28 @@ t_cmd	*parse_tokens(t_token *tokens);
 t_cmd	*parse_pipeline(t_token **current);
 void	free_cmds(t_cmd *cmds);
 void	add_arg(t_cmd *cmd, char *arg);
-int	is_redir(t_token_type type);
+int		is_redir(t_token_type type);
 void	add_redir(t_cmd *cmd, t_token *redir_token, t_token *file_token);
 void	print_cmds(t_cmd *cmds);
 void	free_redirs(t_redir *redir);
-int	check_syntax(t_token *tokens);
+int		check_syntax(t_token *tokens);
 /* ===================== EXECUTOR ===================== */
 
-void	execute(t_cmd *cmds, char **envp);
-int	exec_external_command(t_cmd *cmd, char **envp);
+void	execute(t_shell *shell, t_cmd *cmds);
+int		exec_external_command(t_cmd *cmd, char **envp);
 
 /* ===================== BUILTINS ===================== */
 
 int		is_builtin(char *cmd);
 int		exec_builtin(t_shell *shell, t_cmd *cmd);
+int		builtin_pwd(void);
 
 /* ===================== UTILS ===================== */
 
 void	error_exit(char *msg);
+void	ft_free_split(char **split);
+char	*ft_strjoin_free(char *s1, const char *s2);
+
+
 
 #endif
