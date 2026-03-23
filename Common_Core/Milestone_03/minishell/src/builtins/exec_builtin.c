@@ -25,6 +25,8 @@ int	exec_builtin(t_shell *shell, t_cmd *cmd)
 		return (builtin_exit());
 	if (ft_strncmp(cmd->args[0], "pwd", 4) == 0)
 		return (builtin_pwd());
+	if (ft_strncmp(cmd->args[0], "unset", 6) == 0)
+		return (builtin_unset(cmd->args, &(shell->env)));
 	return (1);
 }
 
@@ -39,6 +41,8 @@ int	is_builtin(char *cmd)
 	if (ft_strncmp(cmd, "exit", 5) == 0)
 		return (1);
 	if (ft_strncmp(cmd, "pwd", 4) == 0)
+		return (1);
+	if (ft_strncmp(cmd, "unset", 6) == 0)
 		return (1);
 	return (0);
 }
