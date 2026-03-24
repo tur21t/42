@@ -118,13 +118,16 @@ int		exec_external_command(t_cmd *cmd, char **envp);
 
 /* ===================== BUILTINS ===================== */
 
-int		is_builtin(char *cmd);
-int		exec_builtin(t_shell *shell, t_cmd *cmd);
 int		builtin_echo(char **args);
 int		builtin_env(char **env);
 int		builtin_exit(void);
+int		builtin_export(char **args, char ***env);
 int		builtin_pwd(void);
 int		builtin_unset(char **args, char ***env);
+int		exec_builtin(t_shell *shell, t_cmd *cmd);
+int		is_builtin(char *cmd);
+int		match_var(const char *env_entry, const char *name);
+void	update_var(char *name, char *value, char ***env);
 
 /* ===================== UTILS ===================== */
 
