@@ -118,6 +118,7 @@ int		exec_external_command(t_cmd *cmd, char **envp);
 
 /* ===================== BUILTINS ===================== */
 
+int	builtin_cd(char **args, char ***env);
 int		builtin_echo(char **args);
 int		builtin_env(char **env);
 int		builtin_exit(void);
