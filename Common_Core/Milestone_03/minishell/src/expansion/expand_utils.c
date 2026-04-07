@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int is_surrounded_by_single_quotes(const char *str)
+int	is_surrounded_by_single_quotes(const char *str)
 {
 	if (!str)
 		return (0);
@@ -26,13 +26,15 @@ int is_surrounded_by_single_quotes(const char *str)
 void	expand_token_list(t_token *tokens, char **env)
 {
 	t_token	*curr;
+	char	*expanded;
 
 	curr = tokens;
 	while (curr)
 	{
-		if (curr->type == T_WORD && !is_surrounded_by_single_quotes(curr->value))
+		if (curr->type == T_WORD
+			&& !is_surrounded_by_single_quotes(curr->value))
 		{
-			char *expanded = expand_vars(curr->value, env);
+			expanded = expand_vars(curr->value, env);
 			free(curr->value);
 			curr->value = expanded;
 		}

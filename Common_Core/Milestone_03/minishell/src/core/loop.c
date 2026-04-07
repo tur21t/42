@@ -49,8 +49,8 @@ void	shell_loop(t_shell *shell)
 		if (g_signal == SIGINT)
 		{
 			g_signal = 0;
-			free(input);// if needed
-			continue;// show prompt again
+			free(input);
+			continue;
 		}
 		if (!input)
 			handle_input(NULL, shell);
