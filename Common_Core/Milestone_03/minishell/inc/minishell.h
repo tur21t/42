@@ -77,6 +77,12 @@ typedef struct s_shell
 	int			last_exit;
 }	t_shell;
 
+typedef struct s_expand_ctx
+{
+	char	*result;
+	int		j;
+}	t_expand_ctx;
+
 /* ===================== INIT ===================== */
 
 void	init_shell(t_shell *shell, char **envp);
@@ -129,6 +135,11 @@ int		exec_builtin(t_shell *shell, t_cmd *cmd);
 int		is_builtin(char *cmd);
 int		match_var(const char *env_entry, const char *name);
 void	update_var(char *name, char *value, char ***env);
+
+/* ===================== EXPANSION ===================== */
+
+void	expand_token_list(t_token *tokens, char **env);
+char	*expand_vars(const char *input, char **env);
 
 /* ===================== UTILS ===================== */
 

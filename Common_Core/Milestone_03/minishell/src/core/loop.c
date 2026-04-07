@@ -22,6 +22,7 @@ static void	handle_input(char *input, t_shell *shell)
 	if (*input)
 		add_history(input);
 	t_token *tokens = lexer(input);
+	expand_token_list(tokens, shell->env);
 	if (check_syntax(tokens))
 	{
 		t_cmd *cmds = parse_tokens(tokens);

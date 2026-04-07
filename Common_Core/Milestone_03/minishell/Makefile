@@ -12,6 +12,7 @@ SRCS        = src/core/main.c src/core/loop.c \
 			  src/init/tubs.c \
 			  src/parser/parser.c src/parser/parser_support.c src/parser/parser_support02.c \
 			  src/exec/exec.c src/exec/exec_external_commands.c \
+			  src/expansion/expand_vars.c src/expansion/expand_utils.c\
 			  src/utils/free.c \
 			  src/builtins/exec_builtin.c src/builtins/builtin_cd.c src/builtins/echo.c src/builtins/builtin_env.c src/builtins/exit.c src/builtins/builtin_export.c src/builtins/builtin_export_utils.c src/builtins/pwd.c src/builtins/builtin_unset.c\
 			  #src/redirections/ \
