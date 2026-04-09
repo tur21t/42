@@ -17,6 +17,8 @@
 /* ===================== LIBRARIES ===================== */
 
 #include <stdio.h>
+#include <string.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
@@ -65,6 +67,8 @@ typedef struct s_redir
 typedef struct s_cmd
 {
 	char			**args;
+	int				outfile;
+	int				infile;
 	t_redir			*redirs;
 	struct s_cmd	*next;
 }	t_cmd;
@@ -83,10 +87,20 @@ typedef struct s_expand_ctx
 	int		j;
 }	t_expand_ctx;
 
+typedef struct s_pipe
+{
+    int	fd[2][2];
+    int	in;
+    int	out;
+    int	last;
+    int	out_error;
+}	t_pipe;
+
 /* ===================== INIT ===================== */
 
 void	init_shell(t_shell *shell, char **envp);
 void	free_shell(t_shell *shell);
+int		init_pipeline(t_cmd *cmds);
 
 /* ===================== LOOP ===================== */
 
@@ -146,7 +160,28 @@ char	*expand_vars(const char *input, char **env);
 void	error_exit(char *msg);
 void	ft_free_split(char **split);
 char	*ft_strjoin_free(char *s1, const char *s2);
+void	command_not_found(char *cmd);
+void	print_syntax_error(t_token *tokens);
+int	line_ends_with_pipe(const char *line);
+void	replace_newlines_with_spaces(char *line);
 
+/* ===================== REDIRECTIONS ===================== */
+
+int	open_infile(const char *file);
+int	open_outfile(const char *file, int append);
+void	print_redir_error(const char *file, const char *msg);
+int	apply_heredoc_redir(t_redir *redir);
+int	apply_redirections(t_cmd *cmd);
+
+/* ===================== PIPES ===================== */
+
+void	fork_and_exec(t_shell *shell, t_cmd *cmd, t_pipe *pipes);
+void	wait_for_children(int n_cmds);
+void	init_pipes(t_pipe *pipes);
+void	close_pipe(int *fd);
+void	duppipe(int *io, int fd);
+void	set_fds(t_pipe *pipes, int i, int last);
+void	execute_pipeline(t_shell *shell, t_cmd *cmds, int n_cmds);
 
 
 #endif

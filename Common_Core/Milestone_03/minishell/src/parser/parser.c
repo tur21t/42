@@ -14,6 +14,29 @@
 
 t_cmd	*parse_tokens(t_token *tokens)
 {
+	t_token	*tmp;
+
+	tmp = tokens;
+	if (tmp && tmp->type == T_PIPE)
+	{
+		print_syntax_error(tmp);
+		return (NULL);
+	}
+	while (tmp)
+	{
+		if (tmp->type == T_PIPE)
+		{
+			if (!tmp->next || tmp->next->type == T_PIPE)
+			{
+				if (tmp->next)
+					print_syntax_error(tmp->next);
+				else
+					print_syntax_error(tmp);
+				return (NULL);
+			}
+		}
+		tmp = tmp->next;
+	}
 	return (parse_pipeline(&tokens));
 }
 

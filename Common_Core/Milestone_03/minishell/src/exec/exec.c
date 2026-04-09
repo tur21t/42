@@ -14,16 +14,33 @@
 
 void	execute(t_shell *shell, t_cmd *cmds)
 {
-	while (cmds)
-	{
-		if (is_builtin(cmds->args[0]))
-		{
-			exec_builtin(shell, cmds);
-		}
-		else
-		{
-			exec_external_command(cmds, shell->env);
-		}
-		cmds = cmds->next;
-	}
+    int n_cmds;
+
+    n_cmds = init_pipeline(cmds);
+    if (n_cmds == 1)
+    {
+        execute_pipeline(shell, cmds, n_cmds);
+    }
+    else
+    {
+        execute_pipeline(shell, cmds, n_cmds);
+    }
 }
+
+/*void	execute(t_shell *shell, t_cmd *cmds)
+{
+    int n_cmds;
+
+    n_cmds = init_pipeline(cmds);
+    if (n_cmds == 1)
+    {
+        if (is_builtin(cmds->args[0]))
+            exec_builtin(shell, cmds);
+        else
+            exec_external_command(cmds, shell->env);
+    }
+    else
+    {
+        execute_pipeline(shell, cmds, n_cmds);
+    }
+}*/

@@ -73,9 +73,17 @@ int	exec_external_command(t_cmd *cmd, char **envp)
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (-1);
 	path = find_executable(cmd->args[0], envp);
+	if (!path)
+	{
+		command_not_found(cmd->args[0]);
+		return (127);
+	}
 	pid = fork();
 	if (pid == 0)
 	{
+		fprintf(stderr, "execve: %s\n", path);
+		for (int j = 0; cmd->args[j]; j++)
+    	fprintf(stderr, "arg[%d]=%s\n", j, cmd->args[j]);
 		execve(path, cmd->args, envp);
 		perror("execve");
 		exit(127);

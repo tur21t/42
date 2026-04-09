@@ -14,6 +14,8 @@
 
 static void	handle_input(char *input, t_shell *shell)
 {
+	int	n_cmds;
+
 	if (!input)
 	{
 		printf("exit\n");
@@ -23,15 +25,18 @@ static void	handle_input(char *input, t_shell *shell)
 		add_history(input);
 	t_token *tokens = lexer(input);
 	expand_token_list(tokens, shell->env);
-	if (check_syntax(tokens))
+	t_cmd *cmds = NULL;
+	//if (check_syntax(tokens))
+    	cmds = parse_tokens(tokens);
+	if (cmds)
 	{
-		t_cmd *cmds = parse_tokens(tokens);
-		execute(shell, cmds);
-		print_cmds(cmds);
-		free_cmds(cmds);
+    		n_cmds = init_pipeline(cmds);
+    		if (n_cmds > 1)
+        		execute_pipeline(shell, cmds, n_cmds);
+    		else
+        		execute(shell, cmds);
+    		free_cmds(cmds);
 	}
-	else
-		printf("syntax error\n");
 	free_tokens(tokens);
 	free(input);
 }
@@ -56,7 +61,7 @@ void	shell_loop(t_shell *shell)
 			handle_input(NULL, shell);
 		line = ft_strdup(input);
 		free(input);
-		while ((quote = get_unclosed_quote(line)))
+		while ((quote = get_unclosed_quote(line)) || line_ends_with_pipe(line))
 		{
 			input = readline("> ");
 			if (!input)
@@ -67,6 +72,7 @@ void	shell_loop(t_shell *shell)
 			free(tmp);
 			free(input);
 		}
+		replace_newlines_with_spaces(line);
 		handle_input(line, shell);
 	}
 }
