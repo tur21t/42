@@ -26,8 +26,10 @@ static void	handle_input(char *input, t_shell *shell)
 	t_token *tokens = lexer(input);
 	expand_token_list(tokens, shell->env);
 	t_cmd *cmds = NULL;
-	//if (check_syntax(tokens))
-    	cmds = parse_tokens(tokens);
+	if (check_syntax(tokens))
+	    cmds = parse_tokens(tokens);
+	else
+    	print_syntax_error(tokens);
 	if (cmds)
 	{
     		n_cmds = init_pipeline(cmds);
