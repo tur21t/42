@@ -15,16 +15,26 @@
 static int	heredoc_write(const char *delimiter, int write_fd)
 {
 	char	*line;
+	int		eof;
 
+	eof = 0;
 	while (1)
 	{
 		line = readline("> ");
-		if (!line || strcmp(line, delimiter) == 0)
+		if (!line)
+		{
+			eof = 1;
+			break ;
+		}
+		if (strcmp(line, delimiter) == 0)
 			break ;
 		write(write_fd, line, strlen(line));
 		write(write_fd, "\n", 1);
 		free(line);
 	}
+	if (eof)
+		printf("minishell: warning: here-document delimited "
+			"by end-of-file (wanted `%s')\n", delimiter);
 	free(line);
 	return (0);
 }

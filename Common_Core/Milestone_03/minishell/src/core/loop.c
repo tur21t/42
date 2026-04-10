@@ -26,18 +26,22 @@ static void	handle_input(char *input, t_shell *shell)
 	t_token *tokens = lexer(input);
 	expand_token_list(tokens, shell->env);
 	t_cmd *cmds = NULL;
-	if (check_syntax(tokens))
-	    cmds = parse_tokens(tokens);
-	else
-    	print_syntax_error(tokens);
+	if (!check_syntax(tokens))
+	{
+		printf("minishell: syntax error near unexpected token `newline'\n");
+		free_tokens(tokens);
+		free(input);
+		return ;
+	}
+	cmds = parse_tokens(tokens);
 	if (cmds)
 	{
-    		n_cmds = init_pipeline(cmds);
-    		if (n_cmds > 1)
-        		execute_pipeline(shell, cmds, n_cmds);
-    		else
-        		execute(shell, cmds);
-    		free_cmds(cmds);
+			n_cmds = init_pipeline(cmds);
+			if (n_cmds > 1)
+				execute_pipeline(shell, cmds, n_cmds);
+			else
+				execute(shell, cmds);
+			free_cmds(cmds);
 	}
 	free_tokens(tokens);
 	free(input);
@@ -49,9 +53,12 @@ void	shell_loop(t_shell *shell)
 	char	*line;
 	char	*tmp;
 	char	quote;
+	int		skip_input;
 
+	
 	while (1)
 	{
+		skip_input = 0;
 		input = readline("minishell$ ");
 		if (g_signal == SIGINT)
 		{
@@ -67,14 +74,33 @@ void	shell_loop(t_shell *shell)
 		{
 			input = readline("> ");
 			if (!input)
-				break;
+			{
+				if (quote) 
+				{
+					printf("minishell: unexpected EOF while looking for matching `%c'\n", quote);
+					printf("minishell: syntax error: unexpected end of file\n");
+					free(line);
+					skip_input = 1;
+					break;
+				} 
+				else 
+				{
+				printf("minishell: syntax error: unexpected end of file\n");
+				printf("exit\n");
+				free(line);
+				exit(2);
+				}
+			}
 			tmp = ft_strjoin(line, "\n");
 			free(line);
 			line = ft_strjoin(tmp, input);
 			free(tmp);
 			free(input);
 		}
-		replace_newlines_with_spaces(line);
-		handle_input(line, shell);
+		if (!skip_input)
+		{
+			replace_newlines_with_spaces(line);
+			handle_input(line, shell);
+		}
 	}
 }
