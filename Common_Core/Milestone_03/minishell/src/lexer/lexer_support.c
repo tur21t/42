@@ -51,27 +51,30 @@ int	get_word_end(char *input, int i)
 	return (i);
 }
 
-char	*remove_quotes(const char *str)
+char	*remove_quotes_and_detect(const char *str, char *quote_type)
 {
 	char	*res;
 	int		i;
 	int		j;
 	char	quote;
 
+	i = 0;
+	j = 0;
+	quote = 0;
 	res = malloc(ft_strlen(str) + 1);
 	if (!res)
 		return (NULL);
-	i = 0;
-	j = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'' || str[i] == '"')
+		if ((str[i] == '\'' || str[i] == '"') && !quote)
 		{
 			quote = str[i++];
+			*quote_type = quote;
 			while (str[i] && str[i] != quote)
 				res[j++] = str[i++];
 			if (str[i] == quote)
 				i++;
+			quote = 0;
 		}
 		else
 			res[j++] = str[i++];

@@ -12,45 +12,70 @@
 
 #include "minishell.h"
 
+// Helper: add a token for a substring with quote context
+static void	add_token_from_substr(t_token **tokens, const char *input, int start, int end, char quote)
+{
+	char *substr = ft_substr(input, start, end - start);
+	add_token(tokens, substr, T_WORD, quote);
+	free(substr);
+}
+
 int	handle_redir(t_token **tokens, char *input, int i)
 {
 	if (input[i] == '<' && input[i + 1] == '<')
 	{
-		add_token(tokens, "<<", T_HEREDOC);
+		add_token(tokens, "<<", T_HEREDOC, 0);
 		i += 2;
 	}
 	else if (input[i] == '>' && input[i + 1] == '>')
 	{
-		add_token(tokens, ">>", T_REDIR_APPEND);
+		add_token(tokens, ">>", T_REDIR_APPEND, 0);
 		i += 2;
 	}
 	else if (input[i] == '<')
 	{
-		add_token(tokens, "<", T_REDIR_IN);
+		add_token(tokens, "<", T_REDIR_IN, 0);
 		i++;
 	}
 	else if (input[i] == '>')
 	{
-		add_token(tokens, ">", T_REDIR_OUT);
+		add_token(tokens, ">", T_REDIR_OUT, 0);
 		i++;
 	}
 	return (i);
 }
 
+// Main word handler: splits at quote boundaries
 int	handle_word(t_token **tokens, char *input, int i)
 {
-	int		start;
-	char	*word;
-	char	*clean_word;
+	int start;
 
 	start = i;
-	i = get_word_end(input, i);
-	word = ft_substr(input, start, i - start);
-	clean_word = remove_quotes(word);
-	add_token(tokens, clean_word, T_WORD);
-	free(word);
-	free(clean_word);
-	return (i);
+	while (input[i] && input[i] != ' ' && input[i] != '\t' &&
+		   input[i] != '|' && input[i] != '<' && input[i] != '>')
+	{
+		if (input[i] == '\'' || input[i] == '"')
+		{
+			// Add any preceding unquoted part
+			if (i > start)
+				add_token_from_substr(tokens, input, start, i, 0);
+
+			char quote = input[i++];
+			int qstart = i;
+			while (input[i] && input[i] != quote)
+				i++;
+			add_token_from_substr(tokens, input, qstart, i, quote);
+			if (input[i] == quote)
+				i++;
+			start = i;
+		}
+		else
+			i++;
+	}
+	// Add any trailing unquoted part
+	if (i > start)
+		add_token_from_substr(tokens, input, start, i, 0);
+	return i;
 }
 
 t_token	*lexer(char *input)
@@ -66,7 +91,7 @@ t_token	*lexer(char *input)
 			i++;
 		else if (input[i] == '|')
 		{
-			add_token(&tokens, "|", T_PIPE);
+			add_token(&tokens, "|", T_PIPE, 0);
 			i++;
 		}
 		else if (input[i] == '<' || input[i] == '>')
@@ -77,7 +102,7 @@ t_token	*lexer(char *input)
 	return (tokens);
 }
 
-void	add_token(t_token **tokens, char *value, t_token_type type)
+void	add_token(t_token **tokens, char *value, t_token_type type, char quote)
 {
 	t_token	*new;
 	t_token	*last;
@@ -87,19 +112,17 @@ void	add_token(t_token **tokens, char *value, t_token_type type)
 		return ;
 	new->value = ft_strdup(value);
 	new->type = type;
+	new->quote = quote;
 	new->next = NULL;
 	if (*tokens == NULL)
 	{
 		*tokens = new;
 		return ;
 	}
-	else
-	{
-		last = *tokens;
-		while (last->next)
-			last = last->next;
-		last->next = new;
-	}
+	last = *tokens;
+	while (last->next)
+		last = last->next;
+	last->next = new;
 }
 
 void	free_tokens(t_token *tokens)
