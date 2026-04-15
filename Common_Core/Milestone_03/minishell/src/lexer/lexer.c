@@ -13,9 +13,12 @@
 #include "minishell.h"
 
 // Helper: add a token for a substring with quote context
-static void	add_token_from_substr(t_token **tokens, const char *input, int start, int end, char quote)
+static void	add_token_from_substr(
+	t_token **tokens, const char *input, int start, int end, char quote)
 {
-	char *substr = ft_substr(input, start, end - start);
+	char	*substr;
+
+	substr = ft_substr(input, start, end - start);
 	add_token(tokens, substr, T_WORD, quote);
 	free(substr);
 }
@@ -48,20 +51,21 @@ int	handle_redir(t_token **tokens, char *input, int i)
 // Main word handler: splits at quote boundaries
 int	handle_word(t_token **tokens, char *input, int i)
 {
-	int start;
+	int		start;
+	char	quote;
+	int		qstart;
 
 	start = i;
-	while (input[i] && input[i] != ' ' && input[i] != '\t' &&
-		   input[i] != '|' && input[i] != '<' && input[i] != '>')
+	while (input[i] && input[i] != ' ' && input[i] != '\t'
+		&& input[i] != '|' && input[i] != '<' && input[i] != '>')
 	{
 		if (input[i] == '\'' || input[i] == '"')
 		{
 			// Add any preceding unquoted part
 			if (i > start)
 				add_token_from_substr(tokens, input, start, i, 0);
-
-			char quote = input[i++];
-			int qstart = i;
+			quote = input[i++];
+			qstart = i;
 			while (input[i] && input[i] != quote)
 				i++;
 			add_token_from_substr(tokens, input, qstart, i, quote);
@@ -75,7 +79,7 @@ int	handle_word(t_token **tokens, char *input, int i)
 	// Add any trailing unquoted part
 	if (i > start)
 		add_token_from_substr(tokens, input, start, i, 0);
-	return i;
+	return (i);
 }
 
 t_token	*lexer(char *input)
