@@ -6,7 +6,7 @@
 /*   By: dfrincu <dfrincu@student.42barcelona.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 14:35:34 by dfrincu           #+#    #+#             */
-/*   Updated: 2026/03/23 14:35:35 by dfrincu          ###   ########.fr       */
+/*   Updated: 2026/04/15 11:19:45 by dfrincu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ void	init_pipes(t_pipe *pipes)
 
 void	close_pipe(int *fd)
 {
-	close(fd[0]);
-	close(fd[1]);
+	if (fd[0] >= 0)
+		close(fd[0]);
+	if (fd[1] >= 0)
+		close(fd[1]);
 }
 
 void	duppipe(int *io, int fd)
