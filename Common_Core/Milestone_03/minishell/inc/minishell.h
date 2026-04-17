@@ -63,6 +63,7 @@ typedef struct s_redir
 {
 	t_token_type		type;
 	char				*file;
+	int					quoted;
 	struct s_redir		*next;
 }	t_redir;
 
@@ -133,6 +134,8 @@ void	add_redir(t_cmd *cmd, t_token *redir_token, t_token *file_token);
 void	print_cmds(t_cmd *cmds);
 void	free_redirs(t_redir *redir);
 int		check_syntax(t_token *tokens);
+int		process_heredocs_and_check_syntax(t_token *tokens);
+
 /* ===================== EXECUTOR ===================== */
 
 void	execute(t_shell *shell, t_cmd *cmds);
@@ -166,14 +169,16 @@ void	command_not_found(char *cmd);
 void	print_syntax_error(t_token *tokens);
 int	line_ends_with_pipe(const char *line);
 void	replace_newlines_with_spaces(char *line);
+void	expand_vars_in_line(char **line, char **env);
 
 /* ===================== REDIRECTIONS ===================== */
 
 int	open_infile(const char *file);
 int	open_outfile(const char *file, int append);
 void	print_redir_error(const char *file, const char *msg);
-int	apply_heredoc_redir(t_redir *redir);
-int	apply_redirections(t_cmd *cmd);
+int	apply_heredoc_redir(t_redir *redir, t_shell *shell, int is_last);
+int	apply_redirections(t_cmd *cmd, t_shell *shell);
+int	apply_heredoc_token(t_token *heredoc_token, t_shell *shell);
 
 /* ===================== PIPES ===================== */
 

@@ -53,3 +53,12 @@ int	line_ends_with_pipe(const char *line)
         i--;
     return (i >= 0 && line[i] == '|');
 }
+
+void	expand_vars_in_line(char **line, char **env)
+{
+    char	*expanded;
+
+    expanded = expand_vars(*line, env);
+    free(*line);
+    *line = expanded;
+}

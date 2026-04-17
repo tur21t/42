@@ -26,6 +26,12 @@ static void	handle_input(char *input, t_shell *shell)
 	t_token *tokens = lexer(input);
 	expand_token_list(tokens, shell->env);
 	t_cmd *cmds = NULL;
+	if (!process_heredocs_and_check_syntax(tokens))
+    {
+        free_tokens(tokens);
+        free(input);
+        return ;
+    }
 	if (!check_syntax(tokens))
 	{
 		printf("minishell: syntax error near unexpected token `newline'\n");

@@ -33,7 +33,7 @@ static int	apply_out_redir(t_redir *redir, int append)
 	fd = open_outfile(redir->file, append);
 	if (fd == -1)
 		return (-1);
-	if (dup2(fd, STDOUT_FILENO))
+	if (dup2(fd, STDOUT_FILENO) == -1)
 		perror("dup2 out");
 	close(fd);
 	return (0);
@@ -47,19 +47,41 @@ static int	apply_one_redir(t_redir *redir)
 		return (apply_out_redir(redir, 0));
 	else if (redir->type == T_REDIR_APPEND)
 		return (apply_out_redir(redir, 1));
-	else if (redir->type == T_HEREDOC)
-		return (apply_heredoc_redir(redir));
+	//else if (redir->type == T_HEREDOC)
+	//	return (apply_heredoc_redir(redir, shell));
 	return (0);
 }
 
-int	apply_redirections(t_cmd *cmd)
+static int	count_heredocs(t_redir *redir)
+{
+    int count = 0;
+    while (redir)
+    {
+        if (redir->type == T_HEREDOC)
+            count++;
+        redir = redir->next;
+    }
+    return count;
+}
+
+int	apply_redirections(t_cmd *cmd, t_shell *shell)
 {
 	t_redir	*redir;
+	int		hindex;
+	int		hcount;
 
+	hcount = count_heredocs(cmd->redirs);
+	hindex = 0;
 	redir = cmd->redirs;
 	while (redir)
 	{
-		if (apply_one_redir(redir) == -1)
+		if (redir->type == T_HEREDOC)
+		{
+			hindex++;
+			if (apply_heredoc_redir(redir, shell, hindex == hcount) == -1)
+				return (-1);
+		}
+		else if (apply_one_redir(redir) == -1)
 			return (-1);
 		redir = redir->next;
 	}

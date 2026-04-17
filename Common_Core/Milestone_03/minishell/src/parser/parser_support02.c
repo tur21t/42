@@ -100,3 +100,23 @@ int	check_syntax(t_token *tokens)
 		return (0);
 	return (1);
 }
+
+int	process_heredocs_and_check_syntax(t_token *tokens)
+{
+    t_token	*tmp = tokens;
+
+    while (tmp)
+    {
+        if ((tmp->type == T_HEREDOC || is_redir(tmp->type)))
+        {
+            if (!tmp->next || tmp->next->type != T_WORD)
+            {
+                printf("minishell: syntax error near unexpected token `newline'\n");
+                return (0);
+            }
+            tmp = tmp->next; // saltar el delimitador
+        }
+        tmp = tmp->next;
+    }
+    return (1);
+}

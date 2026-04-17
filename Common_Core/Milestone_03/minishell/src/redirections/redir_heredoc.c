@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-static int	heredoc_write(const char *delimiter, int write_fd)
+static int	heredoc_write(
+	const char *delimiter, int write_fd, int quoted, char **env)
 {
 	char	*line;
 	int		eof;
@@ -28,6 +29,8 @@ static int	heredoc_write(const char *delimiter, int write_fd)
 		}
 		if (strcmp(line, delimiter) == 0)
 			break ;
+		if (!quoted)
+			expand_vars_in_line(&line, env);
 		write(write_fd, line, strlen(line));
 		write(write_fd, "\n", 1);
 		free(line);
@@ -39,20 +42,40 @@ static int	heredoc_write(const char *delimiter, int write_fd)
 	return (0);
 }
 
-int	apply_heredoc_redir(t_redir *redir)
+int	apply_heredoc_redir(t_redir *redir, t_shell *shell, int is_last)
 {
 	int	pipefd[2];
 
 	if (pipe(pipefd) == -1)
 		return (-1);
-	if (heredoc_write(redir->file, pipefd[1]) == -1)
+	if (heredoc_write(redir->file, pipefd[1], redir->quoted, shell->env) == -1)
 	{
 		close(pipefd[0]);
 		close(pipefd[1]);
 		return (-1);
 	}
 	close(pipefd[1]);
-	dup2(pipefd[0], STDIN_FILENO);
+	if (is_last)
+		dup2(pipefd[0], STDIN_FILENO);
+	close(pipefd[0]);
+	return (0);
+}
+
+int	apply_heredoc_token(t_token *heredoc_token, t_shell *shell)
+{
+	char	*delimiter = heredoc_token->next->value;
+	int		quote = heredoc_token->next->quote;
+	int		pipefd[2];
+
+	if (pipe(pipefd) == -1)
+		return (-1);
+	if (heredoc_write(delimiter, pipefd[1], quote == 0, shell->env) == -1)
+	{
+		close(pipefd[0]);
+		close(pipefd[1]);
+		return (-1);
+	}
+	close(pipefd[1]);
 	close(pipefd[0]);
 	return (0);
 }

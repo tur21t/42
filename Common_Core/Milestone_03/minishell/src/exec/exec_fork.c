@@ -53,7 +53,7 @@ void	fork_and_exec(t_shell *shell, t_cmd *cmd, t_pipe *pipes)
 		}
 		close_pipe(pipes->fd[0]);
 		close_pipe(pipes->fd[1]);
-		if (apply_redirections(cmd) == -1)
+		if (apply_redirections(cmd, shell) == -1)
 			exit(1);
 		if (is_builtin(cmd->args[0]))
 			exec_builtin(shell, cmd);
