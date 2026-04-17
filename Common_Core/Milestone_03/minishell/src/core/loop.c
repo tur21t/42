@@ -26,12 +26,34 @@ static void	handle_input(char *input, t_shell *shell)
 	t_token *tokens = lexer(input);
 	expand_token_list(tokens, shell->env);
 	t_cmd *cmds = NULL;
+	t_token *error_token = NULL;
+	int redir_status = check_redir_syntax_before_heredoc(tokens, &error_token);
+	if (redir_status == 0)
+	{
+    		free_tokens(tokens);
+    		free(input);
+    		return ;
+	}
+	if (redir_status == 2)
+	{
+    	// procesa todos los heredocs antes del error
+    		t_token *tmp = tokens;
+    		while (tmp && tmp != error_token)
+    		{
+        		if (tmp->type == T_HEREDOC)
+            			apply_heredoc_token(tmp, shell);
+        		tmp = tmp->next;
+    		}
+    		free_tokens(tokens);
+    		free(input);
+    		return ;
+	}
 	if (!process_heredocs_and_check_syntax(tokens))
-    {
-        free_tokens(tokens);
-        free(input);
-        return ;
-    }
+    	{
+        	free_tokens(tokens);
+        	free(input);
+        	return ;
+    	}
 	if (!check_syntax(tokens))
 	{
 		printf("minishell: syntax error near unexpected token `newline'\n");

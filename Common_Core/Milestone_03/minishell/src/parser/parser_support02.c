@@ -111,12 +111,39 @@ int	process_heredocs_and_check_syntax(t_token *tokens)
         {
             if (!tmp->next || tmp->next->type != T_WORD)
             {
-                printf("minishell: syntax error near unexpected token `newline'\n");
+                //printf("minishell: syntax error near unexpected token `newline'\n");
                 return (0);
             }
             tmp = tmp->next; // saltar el delimitador
         }
         tmp = tmp->next;
     }
+    return (1);
+}
+
+int	check_redir_syntax_before_heredoc(t_token *tokens, t_token **error_token)
+{
+    t_token *tmp = tokens;
+
+    while (tmp)
+    {
+        if (is_redir(tmp->type))
+        {
+            if (!tmp->next)
+            {
+                printf("minishell: syntax error near unexpected token `newline'\n");
+                *error_token = tmp;
+                return (2);
+            }
+            if (is_redir(tmp->next->type))
+            {
+                printf("minishell: syntax error near unexpected token `%s'\n", tmp->next->value);
+                *error_token = tmp->next;
+                return (2);
+            }
+        }
+        tmp = tmp->next;
+    }
+    *error_token = NULL;
     return (1);
 }

@@ -134,7 +134,8 @@ void	add_redir(t_cmd *cmd, t_token *redir_token, t_token *file_token);
 void	print_cmds(t_cmd *cmds);
 void	free_redirs(t_redir *redir);
 int		check_syntax(t_token *tokens);
-int		process_heredocs_and_check_syntax(t_token *tokens);
+int	process_heredocs_and_check_syntax(t_token *tokens);
+int	check_redir_syntax_before_heredoc(t_token *tokens, t_token **error_token);
 
 /* ===================== EXECUTOR ===================== */
 
