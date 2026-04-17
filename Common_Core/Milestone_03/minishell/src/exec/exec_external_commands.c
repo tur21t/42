@@ -76,7 +76,7 @@ int	exec_external_command(t_cmd *cmd, char **envp)
 	if (!path)
 	{
 		command_not_found(cmd->args[0]);
-		return (127);
+		return (127 << 8);
 	}
 	pid = fork();
 	if (pid == 0)

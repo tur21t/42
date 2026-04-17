@@ -23,7 +23,7 @@ int	is_surrounded_by_single_quotes(const char *str)
 	return (0);
 }
 
-void	expand_token_list(t_token *tokens, char **env)
+void	expand_token_list(t_token *tokens, char **env, int last_exit)
 {
 	t_token	*curr;
 	char	*expanded;
@@ -34,7 +34,7 @@ void	expand_token_list(t_token *tokens, char **env)
 		if (curr->type == T_WORD && curr->quote != '\''
 			&& !is_surrounded_by_single_quotes(curr->value))
 		{
-			expanded = expand_vars(curr->value, env);
+			expanded = expand_vars(curr->value, env, last_exit);
 			free(curr->value);
 			curr->value = expanded;
 		}

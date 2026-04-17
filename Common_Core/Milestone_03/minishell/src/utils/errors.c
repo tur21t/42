@@ -54,11 +54,23 @@ int	line_ends_with_pipe(const char *line)
     return (i >= 0 && line[i] == '|');
 }
 
-void	expand_vars_in_line(char **line, char **env)
+void	expand_vars_in_line(char **line, char **env, int last_exit)
 {
     char	*expanded;
 
-    expanded = expand_vars(*line, env);
+    expanded = expand_vars(*line, env, last_exit);
     free(*line);
     *line = expanded;
+}
+
+int	line_ends_with_backslash(const char *line)
+{
+    int	i;
+
+    if (!line || !*line)
+        return (0);
+    i = (int)strlen(line) - 1;
+    while (i >= 0 && (line[i] == ' ' || line[i] == '\t'))
+        i--;
+    return (i >= 0 && line[i] == '\\');
 }

@@ -134,7 +134,7 @@ void	add_redir(t_cmd *cmd, t_token *redir_token, t_token *file_token);
 void	print_cmds(t_cmd *cmds);
 void	free_redirs(t_redir *redir);
 int		check_syntax(t_token *tokens);
-int	process_heredocs_and_check_syntax(t_token *tokens);
+int		process_heredocs_and_check_syntax(t_token *tokens);
 int	check_redir_syntax_before_heredoc(t_token *tokens, t_token **error_token);
 
 /* ===================== EXECUTOR ===================== */
@@ -158,8 +158,8 @@ void	update_var(char *name, char *value, char ***env);
 
 /* ===================== EXPANSION ===================== */
 
-void	expand_token_list(t_token *tokens, char **env);
-char	*expand_vars(const char *input, char **env);
+void	expand_token_list(t_token *tokens, char **env, int last_exit);
+char	*expand_vars(const char *input, char **env, int last_exit);
 
 /* ===================== UTILS ===================== */
 
@@ -170,7 +170,8 @@ void	command_not_found(char *cmd);
 void	print_syntax_error(t_token *tokens);
 int	line_ends_with_pipe(const char *line);
 void	replace_newlines_with_spaces(char *line);
-void	expand_vars_in_line(char **line, char **env);
+void	expand_vars_in_line(char **line, char **env, int last_exit);
+int		line_ends_with_backslash(const char *line);
 
 /* ===================== REDIRECTIONS ===================== */
 
@@ -183,8 +184,8 @@ int	apply_heredoc_token(t_token *heredoc_token, t_shell *shell);
 
 /* ===================== PIPES ===================== */
 
-void	fork_and_exec(t_shell *shell, t_cmd *cmd, t_pipe *pipes);
-void	wait_for_children(int n_cmds);
+pid_t	fork_and_exec(t_shell *shell, t_cmd *cmd, t_pipe *pipes);
+int		wait_for_children(int n_cmds, pid_t last_pid);
 void	init_pipes(t_pipe *pipes);
 void	close_pipe(int *fd);
 void	duppipe(int *io, int fd);

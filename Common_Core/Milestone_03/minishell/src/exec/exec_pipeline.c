@@ -60,25 +60,27 @@ void	set_fds(t_pipe *pipes, int i, int last)
 
 void	execute_pipeline(t_shell *shell, t_cmd *cmds, int n_cmds)
 {
-	t_pipe	pipes;
-	t_cmd	*curr;
-	int		i;
+    t_pipe	pipes;
+    t_cmd	*curr;
+    int		i;
+    pid_t	last_pid;
 
-	init_pipes(&pipes);
-	curr = cmds;
-	i = 0;
-	while (curr)
-	{
-		if (curr->next)
-			pipe(pipes.fd[i % 2]);
-		set_fds(&pipes, i, curr->next == NULL);
-		fork_and_exec(shell, curr, &pipes);
-		if (curr->next)
-			close(pipes.fd[i % 2][1]);
-		if (i > 0)
-			close(pipes.fd[(i + 1) % 2][0]);
-		curr = curr->next;
-		i++;
-	}
-	wait_for_children(n_cmds);
+    init_pipes(&pipes);
+    curr = cmds;
+    i = 0;
+    last_pid = -1;
+    while (curr)
+    {
+        if (curr->next)
+            pipe(pipes.fd[i % 2]);
+        set_fds(&pipes, i, curr->next == NULL);
+        last_pid = fork_and_exec(shell, curr, &pipes);
+        if (curr->next)
+            close(pipes.fd[i % 2][1]);
+        if (i > 0)
+            close(pipes.fd[(i + 1) % 2][0]);
+        curr = curr->next;
+        i++;
+    }
+    shell->last_exit = wait_for_children(n_cmds, last_pid);
 }
