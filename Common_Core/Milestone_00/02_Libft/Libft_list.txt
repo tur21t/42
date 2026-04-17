@@ -1,0 +1,92 @@
++ isalpha
++ isdigit
++ isalnum
++ isascii
++ isprint
++ strlen
++ memset
++ bzero
++ memcpy
++ memmove
++ strlcpy
++ strlcat
++ toupper
++ tolower
++ strchr
++ strrchr
++ strncmp
++ memchr
++ memcmp
++ strnstr
++ atoi
+Para implementar estas otras dos funciones, tendrás que utilizar malloc():
++ calloc
++ strdup
+
+23/23
+
+
+PART 2:
+
+
+
++ 01 - ft_putchar_fd - [void ft_putchar_fd(char c, int fd);]
+
++ 02 - ft_putstr_fd - void ft_putstr_fd(char *s, int fd);
+
++ 03 - ft_putendl_fd - void ft_putendl_fd(char *s, int fd);
+
++ 04 - ft_putnbr_fd - void ft_putnbr_fd(int n, int fd);
+
+  05 - ft_substr - char *ft_substr(char const *s, unsigned int start,
+size_t len);
+
++ 06  - ft_strjoin - char *ft_strjoin(char const *s1, char const *s2);
+
++ 07 - ft_strtrim - char *ft_strtrim(char const *s1, char const *set);
+
++ 08 - ft_itoa - char *ft_itoa(int n);
+
++ 09 - ft_strmapi - char *ft_strmapi(char const *s, char (*f)(unsigned
+int, char));
+
+  10 - ft_striteri - void ft_striteri(char *s, void (*f)(unsigned int,
+char*));
+
++ 11 - ft_split - char **ft_split(char const *s, char c)
+
+
+
+ft_isalpha       ✓✓✓✓✓✓✓              OK
+ft_isdigit       ✓✓✓✓✓✓✓              OK
+ft_isalnum       ✓✓✓✓✓✓✓              OK
+ft_isascii       ✓✓✓✓✓✓✓✓             OK
+ft_isprint       ✓✓✓✓✓✓✓              OK
+ft_strlen        ✓✓✓✓✓✓               OK
+ft_memset        ✓✓✓✓                 OK
+ft_bzero         ✓✓                   OK
+ft_memcpy        ✓✓✓                  OK
+ft_memmove       ✓✓✓✓✓                OK
+ft_strlcpy       compil. failed       KO
+ft_strlcat       ✓✓✓✓✓✓✓✓✓            OK
+ft_strchr        ✓✓✓✓✓✓               OK
+ft_strrchr       ✓✓✓✓✓✓✓✓             OK
+ft_strncmp       ✓✓✓✓✓✓✓✓✓✓✓          OK
+ft_memchr        ✓✓✓✓✓✓               OK
+ft_memcmp        ✓✓✓✓✓✓✓✓✓            OK
+ft_strnstr       ✓✓✓✓✓✓✓✓✓✓           OK
+ft_atoi          ✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓✓  OK
+ft_calloc        ✓                    OK
+ft_strdup        ✓                    OK
+ft_substr        compil. failed       KO
+ft_strjoin       ✓✓✓✓                 OK
+ft_strtrim       ✓✓✓✓✓                OK
+ft_split         ✓✓✓✓✓✓               OK
+ft_itoa          ✓✓✓✓✓✓✓✓✓✓           OK
+ft_strmapi       compil. failed       KO
+ft_striteri      compil. failed       KO
+ft_putchar_fd    ✓✓✓✓✓✓✓              OK
+ft_putstr_fd     ✓✓✓✓                 OK
+ft_putendl_fd    ✓✓✓✓                 OK
+ft_putnbr_fd     ✓✓✓✓✓✓✓✓✓            OK
+
