@@ -37,7 +37,7 @@ static void	copy_env(char **dst, char **src, int count)
 	i = 0;
 	while (i < count)
 	{
-		dst[i] = src[i];
+		dst[i] = ft_strdup(src[i]);
 		i++;
 	}
 }
@@ -71,28 +71,49 @@ static void	add_var(char *name, char *value, char ***env)
 
 int	builtin_export(char **args, char ***env)
 {
-	int		i;
-	char	*eq;
-	char	*name;
-	char	*value;
+    int		i;
+    char	*eq;
+    char	*name;
+    char	*value;
+    char	*joined;
 
-	i = 1;
-	while (args[i])
-	{
-		eq = ft_strchr(args[i], '=');
-		if (eq)
-		{
-			name = ft_substr(args[i], 0, eq - args[i]);
-			value = ft_strdup(eq + 1);
-			if (name && value)
-			{
-				update_var(name, value, env);
-				add_var(name, value, env);
-			}
-			free(name);
-			free(value);
-		}
-		i++;
-	}
-	return (0);
+    i = 1;
+    while (args[i])
+    {
+        joined = NULL;
+        eq = ft_strchr(args[i], '=');
+
+        /* FIX: caso tokenizado como ["a=","123"] por comillas */
+        if (eq && eq[1] == '\0' && args[i + 1])
+        {
+            joined = ft_strjoin(args[i], args[i + 1]);
+            if (!joined)
+                return (1);
+            eq = ft_strchr(joined, '=');
+            name = ft_substr(joined, 0, eq - joined);
+            value = ft_strdup(eq + 1);
+            free(joined);
+            i += 2;
+        }
+        else if (eq)
+        {
+            name = ft_substr(args[i], 0, eq - args[i]);
+            value = ft_strdup(eq + 1);
+            i++;
+        }
+        else
+        {
+            i++;
+            continue ;
+        }
+        if (name && value)
+        {
+            /* aquí pon tu lógica correcta: update OR add (no ambos) */
+            update_var(name, value, env);
+            add_var(name, value, env);
+        }
+        free(name);
+        free(value);
+    }
+    return (0);
 }
