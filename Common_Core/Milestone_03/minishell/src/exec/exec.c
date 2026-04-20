@@ -29,7 +29,7 @@ static void	exec_single_builtin(t_shell *shell, t_cmd *cmd)
 		close(out);
 		return ;
 	}
-	exec_builtin(shell, cmd);
+	g_signal = exec_builtin(shell, cmd);
 	dup2(in, STDIN_FILENO);
 	dup2(out, STDOUT_FILENO);
 	close(in);
@@ -53,18 +53,18 @@ void	execute(t_shell *shell, t_cmd *cmds)
 
 /*void	execute(t_shell *shell, t_cmd *cmds)
 {
-    int n_cmds;
+	int n_cmds;
 
-    n_cmds = init_pipeline(cmds);
-    if (n_cmds == 1)
-    {
-        if (is_builtin(cmds->args[0]))
-            exec_builtin(shell, cmds);
-        else
-            exec_external_command(cmds, shell->env);
-    }
-    else
-    {
-        execute_pipeline(shell, cmds, n_cmds);
-    }
+	n_cmds = init_pipeline(cmds);
+	if (n_cmds == 1)
+	{
+		if (is_builtin(cmds->args[0]))
+			exec_builtin(shell, cmds);
+		else
+			exec_external_command(cmds, shell->env);
+	}
+	else
+	{
+		execute_pipeline(shell, cmds, n_cmds);
+	}
 }*/

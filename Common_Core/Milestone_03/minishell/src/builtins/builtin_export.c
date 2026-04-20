@@ -72,6 +72,8 @@ static void	add_var(char *name, char *value, char ***env)
 int	builtin_export(char **args, char ***env)
 {
     int		i;
+    int		j;
+    int		found;
     char	*eq;
     char	*name;
     char	*value;
@@ -81,9 +83,9 @@ int	builtin_export(char **args, char ***env)
     while (args[i])
     {
         joined = NULL;
+        name = NULL;
+        value = NULL;
         eq = ft_strchr(args[i], '=');
-
-        /* FIX: caso tokenizado como ["a=","123"] por comillas */
         if (eq && eq[1] == '\0' && args[i + 1])
         {
             joined = ft_strjoin(args[i], args[i + 1]);
@@ -108,9 +110,20 @@ int	builtin_export(char **args, char ***env)
         }
         if (name && value)
         {
-            /* aquí pon tu lógica correcta: update OR add (no ambos) */
-            update_var(name, value, env);
-            add_var(name, value, env);
+            found = 0;
+            j = 0;
+            while ((*env) && (*env)[j])
+            {
+                if (match_var((*env)[j], name))
+                {
+                    update_var(name, value, env);
+                    found = 1;
+                    break ;
+                }
+                j++;
+            }
+            if (!found)
+                add_var(name, value, env);
         }
         free(name);
         free(value);

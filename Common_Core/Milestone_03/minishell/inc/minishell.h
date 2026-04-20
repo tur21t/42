@@ -70,6 +70,7 @@ typedef struct s_redir
 typedef struct s_cmd
 {
 	char			**args;
+	//char			*quotes;
 	int				outfile;
 	int				infile;
 	t_redir			*redirs;
@@ -137,6 +138,7 @@ int		check_syntax(t_token *tokens);
 int	process_heredocs_and_check_syntax(t_token *tokens);
 int	check_redir_syntax_before_heredoc(t_token *tokens, t_token **error_token);
 
+
 /* ===================== EXECUTOR ===================== */
 
 void	execute(t_shell *shell, t_cmd *cmds);
@@ -160,6 +162,8 @@ void	update_var(char *name, char *value, char ***env);
 
 void	expand_token_list(t_token *tokens, char **env);
 char	*expand_vars(const char *input, char **env);
+//void expand_args(char **args, char *quotes, char **env); 
+
 
 /* ===================== UTILS ===================== */
 
