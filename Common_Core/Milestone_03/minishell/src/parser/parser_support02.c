@@ -111,7 +111,7 @@ int	process_heredocs_and_check_syntax(t_token *tokens)
         {
             if (!tmp->next || tmp->next->type != T_WORD)
             {
-                // printf("minishell: syntax error near unexpected token `newline'\n");
+                //printf("minishell: syntax error near unexpected token `newline'\n");
                 return (0);
             }
             tmp = tmp->next; // saltar el delimitador

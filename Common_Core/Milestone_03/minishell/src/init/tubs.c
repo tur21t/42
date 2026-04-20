@@ -31,9 +31,6 @@ void	init_shell(t_shell *shell, char **envp)
 	}
 	shell->env[count] = NULL;
 	// Luego inicializar mas cosas
-	shell->tokens = NULL;
-	shell->cmds = NULL;
-	shell->last_exit = 0;
 }
 
 void	free_shell(t_shell *shell)

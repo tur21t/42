@@ -13,7 +13,7 @@
 #include "minishell.h"
 
 static int	heredoc_write(
-	const char *delimiter, int write_fd, int quoted, char **env, int last_exit)
+	const char *delimiter, int write_fd, int quoted, char **env)
 {
 	char	*line;
 	int		eof;
@@ -30,7 +30,7 @@ static int	heredoc_write(
 		if (strcmp(line, delimiter) == 0)
 			break ;
 		if (!quoted)
-			expand_vars_in_line(&line, env, last_exit);
+			expand_vars_in_line(&line, env);
 		write(write_fd, line, strlen(line));
 		write(write_fd, "\n", 1);
 		free(line);
@@ -48,7 +48,7 @@ int	apply_heredoc_redir(t_redir *redir, t_shell *shell, int is_last)
 
 	if (pipe(pipefd) == -1)
 		return (-1);
-	if (heredoc_write(redir->file, pipefd[1], redir->quoted, shell->env, shell->last_exit) == -1)
+	if (heredoc_write(redir->file, pipefd[1], redir->quoted, shell->env) == -1)
 	{
 		close(pipefd[0]);
 		close(pipefd[1]);
@@ -69,7 +69,7 @@ int	apply_heredoc_token(t_token *heredoc_token, t_shell *shell)
 
 	if (pipe(pipefd) == -1)
 		return (-1);
-	if (heredoc_write(delimiter, pipefd[1], quote == 0, shell->env, shell->last_exit) == -1)
+	if (heredoc_write(delimiter, pipefd[1], quote == 0, shell->env) == -1)
 	{
 		close(pipefd[0]);
 		close(pipefd[1]);
