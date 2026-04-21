@@ -149,7 +149,7 @@ int		exec_external_command(t_cmd *cmd, char **envp);
 int	builtin_cd(char **args, char ***env);
 int		builtin_echo(char **args);
 int		builtin_env(char **env);
-int		builtin_exit(void);
+int		builtin_exit(char **args);
 int		builtin_export(char **args, char ***env);
 int		builtin_pwd(void);
 int		builtin_unset(char **args, char ***env);

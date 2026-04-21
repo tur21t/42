@@ -27,7 +27,7 @@ int	exec_builtin(t_shell *shell, t_cmd *cmd)
 	if (ft_strncmp(cmd->args[0], "env", 4) == 0)
 		return (builtin_env(shell->env));
 	if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
-		return (builtin_exit());
+		return (builtin_exit(cmd->args));
 	if (ft_strncmp(cmd->args[0], "export", 7) == 0)
 		return (builtin_export(cmd->args, &(shell->env)));
 	if (ft_strncmp(cmd->args[0], "pwd", 4) == 0)
