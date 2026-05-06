@@ -49,20 +49,25 @@ int	is_redir(t_token_type type)
 
 void	add_redir(t_cmd *cmd, t_token *redir_token, t_token *file_token)
 {
-	t_redir	*redir;
-	t_redir	*tmp;
+    t_redir	*redir;
+    t_redir	*tmp;
 
-	redir = malloc(sizeof(t_redir));
-	redir->type = redir_token->type;
-	redir->file = ft_strdup(file_token->value);
-	redir->next = NULL;
-	if (!cmd->redirs)
-		cmd->redirs = redir;
-	else
-	{
-		tmp = cmd->redirs;
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = redir;
-	}
+    redir = malloc(sizeof(t_redir));
+    if (!redir)
+        return ;
+    ft_bzero(redir, sizeof(t_redir));
+    redir->type = redir_token->type;
+    redir->file = ft_strdup(file_token->value);
+    redir->next = NULL;
+    if (redir->type == T_HEREDOC)
+        redir->quoted = (file_token->quote != 0);
+    if (!cmd->redirs)
+        cmd->redirs = redir;
+    else
+    {
+        tmp = cmd->redirs;
+        while (tmp->next)
+            tmp = tmp->next;
+        tmp->next = redir;
+    }
 }

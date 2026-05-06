@@ -38,7 +38,7 @@ void	free_shell(t_shell *shell)
 	int	i;
 
 	i = 0;
-	if (!shell->env)
+	if (!shell || !shell->env)
 		return ;
 	while (shell->env[i])
 	{
@@ -46,4 +46,5 @@ void	free_shell(t_shell *shell)
 		i++;
 	}
 	free(shell->env);
+	shell->env = NULL;
 }

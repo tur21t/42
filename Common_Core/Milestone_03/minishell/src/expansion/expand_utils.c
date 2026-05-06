@@ -66,6 +66,11 @@ void	expand_token_list(t_token *tokens, char **env)
     curr = tokens;
     while (curr)
     {
+        if (curr->type == T_HEREDOC && curr->next)
+        {
+            curr = curr->next->next;
+            continue ;
+        }
         if (curr->type == T_WORD && curr->quote != '\''
             && !is_surrounded_by_single_quotes(curr->value))
         {

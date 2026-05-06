@@ -19,6 +19,7 @@ static void	handle_input(char *input, t_shell *shell)
 	if (!input)
 	{
 		printf("exit\n");
+		cleanup_shell(shell, 1);
 		exit(0);
 	}
 	if (*input)
@@ -116,6 +117,7 @@ void	shell_loop(t_shell *shell)
 				printf("minishell: syntax error: unexpected end of file\n");
 				printf("exit\n");
 				free(line);
+				cleanup_shell(shell, 1);
 				exit(2);
 				}
 			}

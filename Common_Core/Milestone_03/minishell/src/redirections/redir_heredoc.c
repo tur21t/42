@@ -69,7 +69,7 @@ int	apply_heredoc_token(t_token *heredoc_token, t_shell *shell)
 
 	if (pipe(pipefd) == -1)
 		return (-1);
-	if (heredoc_write(delimiter, pipefd[1], quote == 0, shell->env) == -1)
+	if (heredoc_write(delimiter, pipefd[1], quote != 0, shell->env) == -1)
 	{
 		close(pipefd[0]);
 		close(pipefd[1]);

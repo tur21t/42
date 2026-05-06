@@ -24,5 +24,7 @@ int	main(int argc, char **argv, char **envp)
 	init_signals();
 	shell_loop(&shell);
 	free_shell(&shell);
+	rl_clear_history();
+	clear_history();
 	return (0);
 }

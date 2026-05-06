@@ -35,3 +35,14 @@ char	*ft_strjoin_free(char *s1, const char *s2)
 	free(s1);
 	return (joined);
 }
+
+void	cleanup_shell(t_shell *shell, int clear_rl_history)
+{
+    if (shell)
+        free_shell(shell);
+    if (clear_rl_history)
+    {
+        rl_clear_history();
+        clear_history();
+    }
+}
