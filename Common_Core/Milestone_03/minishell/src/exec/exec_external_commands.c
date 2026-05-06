@@ -65,44 +65,22 @@ static char	*find_executable(char *cmd, char **envp)
 
 int	exec_external_command(t_cmd *cmd, char **envp)
 {
-    pid_t	pid;
-    int		status;
-    char	*path;
+	char    *path;
 
-    status = 0;
-    if (!cmd || !cmd->args || !cmd->args[0])
-        return (-1);
-    path = find_executable(cmd->args[0], envp);
-    if (!path)
-    {
-        command_not_found(cmd->args[0]);
-        g_signal = 127;
-        return (127);
-    }
-    pid = fork();
-    if (pid == 0)
-    {
-        signal(SIGINT, SIG_DFL);
-        signal(SIGQUIT, SIG_DFL);
-        execve(path, cmd->args, envp);
-        perror("execve");
-        if (errno == EACCES)
-            exit(126);
-        exit(127);
-    }
-    else if (pid > 0)
-    {
-        waitpid(pid, &status, 0);
-        if (WIFEXITED(status))
-            g_signal = WEXITSTATUS(status);
-        else if (WIFSIGNALED(status))
-            g_signal = 128 + WTERMSIG(status);
-    }
-    else
-    {
-        perror("fork");
-        g_signal = 1;
-    }
-    free(path);
-    return (g_signal);
+	if (!cmd || !cmd->args || !cmd->args[0])
+		return (1);
+	path = find_executable(cmd->args[0], envp);
+	if (!path)
+	{
+		command_not_found(cmd->args[0]);
+		return (127);
+	}
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	execve(path, cmd->args, envp);
+	perror("execve");
+	free(path);
+	if (errno == EACCES)
+		return (126);
+	return (127);
 }

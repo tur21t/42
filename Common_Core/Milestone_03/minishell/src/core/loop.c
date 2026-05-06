@@ -91,12 +91,17 @@ void	shell_loop(t_shell *shell)
 		input = readline("minishell$ ");
 		if (g_signal == SIGINT)
 		{
-			g_signal = 0;
+			g_signal = 130;
 			free(input);
 			continue;
 		}
 		if (!input)
 			handle_input(NULL, shell);
+		if (input[0] == '\0')
+		{
+			free(input);
+			continue;
+		}
 		line = ft_strdup(input);
 		free(input);
 		while ((quote = get_unclosed_quote(line)) || line_ends_with_pipe(line))

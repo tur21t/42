@@ -64,6 +64,7 @@ void	execute_pipeline(t_shell *shell, t_cmd *cmds, int n_cmds)
 	t_cmd	*curr;
 	int		i;
 
+	signal(SIGINT, SIG_IGN);
 	init_pipes(&pipes);
 	curr = cmds;
 	i = 0;
@@ -81,4 +82,5 @@ void	execute_pipeline(t_shell *shell, t_cmd *cmds, int n_cmds)
 		i++;
 	}
 	wait_for_children(n_cmds);
+	init_signals();
 }

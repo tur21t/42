@@ -42,6 +42,8 @@ void	fork_and_exec(t_shell *shell, t_cmd *cmd, t_pipe *pipes)
 	}
 	if (pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		if (!has_in_redir(cmd->redirs))
 		{
 			if (dup2(pipes->in, STDIN_FILENO) == -1)
@@ -68,17 +70,33 @@ void	fork_and_exec(t_shell *shell, t_cmd *cmd, t_pipe *pipes)
 
 void	wait_for_children(int n_cmds)
 {
-	int	i;
-	int	status;
+	int		status;
+	int		i;
+	pid_t	pid;
+	int		printed_sigint;
 
 	i = 0;
+	printed_sigint = 0;
 	while (i < n_cmds)
 	{
-		wait(&status);
+		pid = wait(&status);
+		if (pid == -1)
+		{
+			if (errno == EINTR)
+				continue;
+			break;
+		}
 		if (WIFEXITED(status))
 			g_signal = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
+		{
+			if (!printed_sigint && WTERMSIG(status) == SIGINT)
+			{
+				write(1, "\n", 1);
+				printed_sigint = 1;
+			}
 			g_signal = 128 + WTERMSIG(status);
+		}
 		i++;
 	}
 	if (g_signal == 129)

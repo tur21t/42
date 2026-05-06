@@ -20,6 +20,7 @@ static void	sigint_handler(int sig)
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
+	rl_done = 1;
 }
 
 void	init_signals(void)
