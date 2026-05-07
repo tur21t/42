@@ -102,3 +102,59 @@ void	wait_for_children(int n_cmds)
 	if (g_signal == 129)
 		g_signal = 130;
 }
+
+/*void	fork_and_exec(t_shell *shell, t_cmd *cmd, t_pipe *pipes)
+{
+	pid_t	pid;
+	int		ret;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		exit(1);
+	}
+	if (pid == 0)
+	{
+		if (!has_in_redir(cmd->redirs))
+		{
+			if (dup2(pipes->in, STDIN_FILENO) == -1)
+				exit(1);
+		}
+		if (!has_out_redir(cmd->redirs))
+		{
+			if (dup2(pipes->out, STDOUT_FILENO) == -1)
+				exit(1);
+		}
+		close_pipe(pipes->fd[0]);
+		close_pipe(pipes->fd[1]);
+		if (apply_redirections(cmd, shell) == -1)
+			exit(1);
+		if (is_builtin(cmd->args[0]))
+			ret = exec_builtin(shell, cmd);
+		else
+			ret = exec_external_command(cmd, shell->env);
+		
+		free_shell(shell);
+		exit(ret);
+	}
+}*/
+
+/*void	wait_for_children(int n_cmds)
+{
+	int	i;
+	int	status;
+
+	i = 0;
+	while (i < n_cmds)
+	{
+		wait(&status);
+		if (WIFEXITED(status))
+			g_signal = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			g_signal = 128 + WTERMSIG(status);
+		i++;
+	}
+	if (g_signal == 129)
+		g_signal = 130;
+}*/

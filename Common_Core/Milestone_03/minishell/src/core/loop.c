@@ -83,6 +83,7 @@ void	shell_loop(t_shell *shell)
 	char	*tmp;
 	char	quote;
 	int		skip_input;
+	char	*trimmed;
 
 	
 	while (1)
@@ -135,7 +136,15 @@ void	shell_loop(t_shell *shell)
 		if (!skip_input)
 		{
 			replace_newlines_with_spaces(line);
-			handle_input(line, shell);
+			trimmed = ft_strtrim(line, " \t");
+			free (line);
+			line = NULL;
+			if (!trimmed || trimmed[0] == '\0')
+			{
+				free(trimmed);
+				continue;
+			}
+			handle_input(trimmed, shell);
 		}
 	}
 }
