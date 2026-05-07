@@ -12,6 +12,20 @@
 
 #include "minishell.h"
 
+static int	is_n_option(const char *s)
+{
+    int	i;
+
+    if (!s || s[0] != '-')
+        return (0);
+    i = 1;
+    if (s[i] != 'n')
+        return (0);
+    while (s[i] == 'n')
+        i++;
+    return (s[i] == '\0');
+}
+
 int	builtin_echo(char **args)
 {
 	int	i;
@@ -19,7 +33,7 @@ int	builtin_echo(char **args)
 
 	i = 1;
 	newline = 1;
-	if (args[i] && ft_strncmp(args[i], "-n", 3) == 0)
+    while (args[i] && is_n_option(args[i]))
 	{
 		newline = 0;
 		i++;

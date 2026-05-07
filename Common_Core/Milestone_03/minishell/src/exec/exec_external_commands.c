@@ -28,6 +28,13 @@ static char	*get_env_value(char **envp, char *name)
 	return (NULL);
 }
 
+static int	execve_exit_code_from_errno(int err)
+{
+    if (err == ENOENT)
+        return (127);
+    return (126);
+}
+
 static char	*search_in_paths(char *cmd, char **paths)
 {
 	int		i;
@@ -110,6 +117,7 @@ static char	*find_executable(char *cmd, char **envp)
 int	exec_external_command(t_cmd *cmd, char **envp)
 {
 	char    *path;
+    int     err;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (1);
@@ -122,9 +130,11 @@ int	exec_external_command(t_cmd *cmd, char **envp)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	execve(path, cmd->args, envp);
+    err = errno;
 	perror("execve");
 	free(path);
-	if (errno == EACCES)
-		return (126);
-	return (127);
+    exit(execve_exit_code_from_errno(err));
+	//if (errno == EACCES)
+	//	return (126);
+	//return (127);
 }
