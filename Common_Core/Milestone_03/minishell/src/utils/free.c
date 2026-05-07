@@ -46,3 +46,18 @@ void	cleanup_shell(t_shell *shell, int clear_rl_history)
         clear_history();
     }
 }
+
+void	free_envp(char **env)
+{
+    int	i;
+
+    if (!env)
+        return;
+    i = 0;
+    while (env[i])
+    {
+        free(env[i]);
+        i++;
+    }
+    free(env);
+}

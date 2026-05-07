@@ -65,7 +65,7 @@ static void	add_var(char *name, char *value, char ***env)
 		i++;
 	}
 	new_env[i] = NULL;
-	free(*env);
+	free_envp(*env);
 	*env = new_env;
 }
 

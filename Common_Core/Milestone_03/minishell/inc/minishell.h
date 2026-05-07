@@ -176,6 +176,8 @@ int	line_ends_with_pipe(const char *line);
 void	replace_newlines_with_spaces(char *line);
 void	expand_vars_in_line(char **line, char **env);
 void	cleanup_shell(t_shell *shell, int clear_rl_history);
+void	free_envp(char **env);
+
 
 
 /* ===================== REDIRECTIONS ===================== */
