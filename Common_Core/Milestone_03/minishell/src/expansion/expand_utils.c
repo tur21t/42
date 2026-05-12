@@ -206,7 +206,7 @@ static int	split_token_words(t_token **head, t_token *curr, t_token *prev)
         }
         if (first)
         {
-            curr->value = part; /* curr ahora posee part */
+            curr->value = part;  //curr ahora posee part 
             first = 0;
             replaced = 1;
         }
@@ -215,6 +215,7 @@ static int	split_token_words(t_token **head, t_token *curr, t_token *prev)
             t_token	*nt = new_word_token_take(part, tail->next);
             if (!nt)
             {
+				free(part);
                 ok = 0;
                 break ;
             }
@@ -225,26 +226,30 @@ static int	split_token_words(t_token **head, t_token *curr, t_token *prev)
 
     if (!ok)
     {
-        /* rollback si ya tocamos la lista */
+        //rollback si ya tocamos la lista 
         if (replaced)
         {
-            free(curr->value);      /* libera el primer part */
-            curr->value = orig;     /* restaurar */
-            free_token_chain(curr->next); /* libera tokens añadidos */
-            curr->next = orig_next; /* restaurar enlace */
+            free(curr->value);      // libera el primer part 
+            curr->value = orig;     // restaurar 
+            free_token_chain(curr->next); // libera tokens añadidos 
+            curr->next = orig_next; //restaurar enlace 
         }
+		else
+		{
+			free (orig);
+		}
         return (1);
     }
 
     if (first)
     {
-        /* expansión -> solo whitespace: borrar token y liberar orig dentro de delete_token */
+        // expansión -> solo whitespace: borrar token y liberar orig dentro de delete_token 
         curr->value = orig;
         delete_token(head, curr, prev);
         return (0);
     }
 
-    /* éxito: curr->value ya no es orig, así que liberamos orig */
+    // éxito: curr->value ya no es orig, así que liberamos orig 
     free(orig);
     return (1);
 }

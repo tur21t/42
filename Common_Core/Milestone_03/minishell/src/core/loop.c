@@ -20,7 +20,7 @@ static void	cleanup_iteration(t_token *tokens, t_cmd *cmds)
         free_tokens(tokens);
 }
 
-static void	handle_input(char *input, t_shell *shell)
+/*static void	handle_input(char *input, t_shell *shell)
 {
 	int		n_cmds;
 	t_token		*tokens;
@@ -48,7 +48,7 @@ static void	handle_input(char *input, t_shell *shell)
 		{
 			t_token	*tmp;
 
-			/* procesa todos los heredocs antes del error */
+			// procesa todos los heredocs antes del error 
 			tmp = tokens;
 			while (tmp && tmp != error_token)
 			{
@@ -80,10 +80,78 @@ static void	handle_input(char *input, t_shell *shell)
 		}
 	}
 	cleanup_iteration(tokens, cmds);
+}*/
+
+static void	handle_input(char *input, t_shell *shell)
+{
+    int		n_cmds;
+    t_token		*tokens;
+    t_cmd		*cmds;
+    t_token		*error_token;
+    int			redir_status;
+    int			ok;
+
+    if (!input)
+        return ;
+    if (*input)
+        add_history(input);
+    tokens = lexer(input);
+    cmds = NULL;
+    error_token = NULL;
+    ok = (tokens != NULL);
+    if (ok)
+        expand_token_list(&tokens, shell->env);
+    if (ok)
+    {
+        redir_status = check_redir_syntax_before_heredoc(tokens, &error_token);
+        if (redir_status == 0)
+        {
+            ok = 0;
+            cleanup_iteration(tokens, cmds);
+            return ;
+        }
+        else if (redir_status == 2)
+        {
+            t_token	*tmp;
+
+            tmp = tokens;
+            while (tmp && tmp != error_token)
+            {
+                if (tmp->type == T_HEREDOC)
+                    apply_heredoc_token(tmp, shell);
+                tmp = tmp->next;
+            }
+            ok = 0;
+            cleanup_iteration(tokens, cmds);
+            return ;
+        }
+    }
+    if (ok)
+        ok = process_heredocs_and_check_syntax(tokens);
+    if (ok && !check_syntax(tokens))
+    {
+        printf("minishell: syntax error near unexpected token `newline'\n");
+        ok = 0;
+		cleanup_iteration(tokens, cmds);
+		return ;
+    }
+    if (ok)
+    {
+        cmds = parse_tokens(tokens);
+        if (cmds)
+        {
+            n_cmds = init_pipeline(cmds);
+            if (n_cmds == 1 && cmds->args && cmds->args[0]
+                && is_builtin(cmds->args[0]))
+                execute(shell, cmds);
+            else
+                execute_pipeline(shell, cmds, n_cmds);
+			free_cmds(cmds);
+			cmds = NULL;
+        }
+    }
+    cleanup_iteration(tokens, cmds);
 }
-
-
-
 
 
 void	shell_loop(t_shell *shell)

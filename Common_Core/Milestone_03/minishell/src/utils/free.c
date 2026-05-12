@@ -43,7 +43,7 @@ void	cleanup_shell(t_shell *shell, int clear_rl_history)
     if (clear_rl_history)
     {
         rl_clear_history();
-        clear_history();
+        //clear_history();
         rl_free_line_state();
     }
 }

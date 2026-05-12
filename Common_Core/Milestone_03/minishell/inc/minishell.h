@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dfrincu <dfrincu@student.42barcelona.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/03 11:04:59 by dfrincu           #+#    #+#             */
-/*   Updated: 2026/03/03 11:12:02 by dfrincu          ###   ########.fr       */
+/*   Created: 2026/05/12 14:37:22 by dfrincu           #+#    #+#             */
+/*   Updated: 2026/05/12 14:37:24 by dfrincu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,11 +94,11 @@ typedef struct s_expand_ctx
 
 typedef struct s_pipe
 {
-    int	fd[2][2];
-    int	in;
-    int	out;
-    int	last;
-    int	out_error;
+	int	fd[2][2];
+	int	in;
+	int	out;
+	int	last;
+	int	out_error;
 }	t_pipe;
 
 /* ===================== INIT ===================== */
@@ -136,9 +136,8 @@ void	add_redir(t_cmd *cmd, t_token *redir_token, t_token *file_token);
 void	print_cmds(t_cmd *cmds);
 void	free_redirs(t_redir *redir);
 int		check_syntax(t_token *tokens);
-int	process_heredocs_and_check_syntax(t_token *tokens);
-int	check_redir_syntax_before_heredoc(t_token *tokens, t_token **error_token);
-
+int		process_heredocs_and_check_syntax(t_token *tokens);
+int		check_redir_syntax_before_heredoc(t_token *tokens, t_token **error_token);
 
 /* ===================== EXECUTOR ===================== */
 
@@ -147,7 +146,7 @@ int		exec_external_command(t_cmd *cmd, char **envp);
 
 /* ===================== BUILTINS ===================== */
 
-int	builtin_cd(char **args, char ***env);
+int		builtin_cd(char **args, char ***env);
 int		builtin_echo(char **args);
 int		builtin_env(char **env);
 int		builtin_exit(t_shell *shell, char **args);
@@ -165,7 +164,6 @@ void	expand_token_list(t_token **tokens, char **env);
 char	*expand_vars(const char *input, char **env);
 //void expand_args(char **args, char *quotes, char **env); 
 
-
 /* ===================== UTILS ===================== */
 
 void	error_exit(char *msg);
@@ -173,22 +171,20 @@ void	ft_free_split(char **split);
 char	*ft_strjoin_free(char *s1, const char *s2);
 void	command_not_found(char *cmd);
 void	print_syntax_error(t_token *tokens);
-int	line_ends_with_pipe(const char *line);
+int		line_ends_with_pipe(const char *line);
 void	replace_newlines_with_spaces(char *line);
 void	expand_vars_in_line(char **line, char **env);
 void	cleanup_shell(t_shell *shell, int clear_rl_history);
 void	free_envp(char **env);
 
-
-
 /* ===================== REDIRECTIONS ===================== */
 
-int	open_infile(const char *file);
-int	open_outfile(const char *file, int append);
+int		open_infile(const char *file);
+int		open_outfile(const char *file, int append);
 void	print_redir_error(const char *file, const char *msg);
-int	apply_heredoc_redir(t_redir *redir, t_shell *shell, int is_last);
-int	apply_redirections(t_cmd *cmd, t_shell *shell);
-int	apply_heredoc_token(t_token *heredoc_token, t_shell *shell);
+int		apply_heredoc_redir(t_redir *redir, t_shell *shell, int is_last);
+int		apply_redirections(t_cmd *cmd, t_shell *shell);
+int		apply_heredoc_token(t_token *heredoc_token, t_shell *shell);
 
 /* ===================== PIPES ===================== */
 
@@ -199,6 +195,5 @@ void	close_pipe(int *fd);
 void	duppipe(int *io, int fd);
 void	set_fds(t_pipe *pipes, int i, int last);
 void	execute_pipeline(t_shell *shell, t_cmd *cmds, int n_cmds);
-
 
 #endif
