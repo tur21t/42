@@ -51,6 +51,16 @@ void	execute(t_shell *shell, t_cmd *cmds)
 	execute_pipeline(shell, cmds, n_cmds);
 }
 
+
+
+
+
+
+
+
+
+
+
 /*void	execute(t_shell *shell, t_cmd *cmds)
 {
 	int n_cmds;

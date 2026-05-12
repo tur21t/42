@@ -1,0 +1,4 @@
+valgrind --leak-check=full --show-leak-kinds=all \
+  --suppressions=readline.supp \
+  --gen-suppressions=all \
+  ./minishell

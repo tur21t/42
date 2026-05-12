@@ -83,6 +83,7 @@ typedef struct s_shell
 	t_cmd		*cmds;
 	char		**env;
 	int			last_exit;
+	int			should_exit;
 }	t_shell;
 
 typedef struct s_expand_ctx
@@ -149,7 +150,7 @@ int		exec_external_command(t_cmd *cmd, char **envp);
 int	builtin_cd(char **args, char ***env);
 int		builtin_echo(char **args);
 int		builtin_env(char **env);
-int		builtin_exit(char **args);
+int		builtin_exit(t_shell *shell, char **args);
 int		builtin_export(char **args, char ***env);
 int		builtin_pwd(void);
 int		builtin_unset(char **args, char ***env);
@@ -160,7 +161,7 @@ void	update_var(char *name, char *value, char ***env);
 
 /* ===================== EXPANSION ===================== */
 
-void	expand_token_list(t_token *tokens, char **env);
+void	expand_token_list(t_token **tokens, char **env);
 char	*expand_vars(const char *input, char **env);
 //void expand_args(char **args, char *quotes, char **env); 
 

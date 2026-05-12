@@ -12,9 +12,6 @@
 
 #include "minishell.h"
 
-#include "minishell.h"
-#include <unistd.h>
-
 static int	is_numeric(const char *s)
 {
     int	i;
@@ -35,7 +32,7 @@ static int	is_numeric(const char *s)
     return (1);
 }
 
-int	builtin_exit(char **args)
+/*int	builtin_exit(char **args)
 {
     write(1, "exit\n", 5);
     if (!args || !args[1])
@@ -54,4 +51,37 @@ int	builtin_exit(char **args)
     }
     exit((unsigned char)ft_atoi(args[1]));
     return (0);
+}*/
+
+int	builtin_exit(t_shell *shell, char **args)
+{
+    write(1, "exit\n", 5);
+    if (!shell)
+        return (1);
+
+    // bash behavior: if too many args -> error, do not exit
+    if (args && args[1] && args[2])
+    {
+        write(2, "minishell: exit: too many arguments\n", 36);
+        shell->last_exit = 1;
+        return (1);
+    }
+
+    shell->should_exit = 1;
+
+    if (!args || !args[1])
+    {
+        shell->last_exit = g_signal;
+        return (shell->last_exit);
+    }
+    if (!is_numeric(args[1]))
+    {
+        write(2, "minishell: exit: ", 17);
+        write(2, args[1], ft_strlen(args[1]));
+        write(2, ": numeric argument required\n", 28);
+        shell->last_exit = 2;
+        return (shell->last_exit);
+    }
+    shell->last_exit = (unsigned char)ft_atoi(args[1]);
+    return (shell->last_exit);
 }

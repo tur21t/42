@@ -44,7 +44,7 @@ t_cmd	*parse_cmd(t_token **current)
 {
 	t_cmd	*cmd;
 
-	cmd = malloc(sizeof(t_cmd));
+	cmd = ft_calloc(1, sizeof(*cmd));
 	if (!cmd)
 		return (NULL);
 	cmd->args = NULL;
