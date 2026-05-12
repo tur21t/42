@@ -18,7 +18,6 @@ void	init_shell(t_shell *shell, char **envp)
 	int	i;
 
 	ft_bzero(shell, sizeof(*shell));
-
 	count = 0;
 	i = 0;
 	while (envp[count])
@@ -32,7 +31,6 @@ void	init_shell(t_shell *shell, char **envp)
 		i++;
 	}
 	shell->env[count] = NULL;
-	// Luego inicializar mas cosas
 }
 
 void	free_shell(t_shell *shell)

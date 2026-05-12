@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 static int	apply_in_redir(t_redir *redir)
 {
 	int	fd;
@@ -47,21 +46,21 @@ static int	apply_one_redir(t_redir *redir)
 		return (apply_out_redir(redir, 0));
 	else if (redir->type == T_REDIR_APPEND)
 		return (apply_out_redir(redir, 1));
-	//else if (redir->type == T_HEREDOC)
-	//	return (apply_heredoc_redir(redir, shell));
 	return (0);
 }
 
 static int	count_heredocs(t_redir *redir)
 {
-    int count = 0;
-    while (redir)
-    {
-        if (redir->type == T_HEREDOC)
-            count++;
-        redir = redir->next;
-    }
-    return count;
+	int	count;
+
+	count = 0;
+	while (redir)
+	{
+		if (redir->type == T_HEREDOC)
+			count++;
+		redir = redir->next;
+	}
+	return (count);
 }
 
 int	apply_redirections(t_cmd *cmd, t_shell *shell)

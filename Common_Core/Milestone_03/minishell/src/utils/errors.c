@@ -19,18 +19,22 @@ void	command_not_found(char *cmd)
 
 void	replace_newlines_with_spaces(char *line)
 {
-    int i = 0;
-    while (line && line[i])
-    {
-        if (line[i] == '\n')
-            line[i] = ' ';
-        i++;
-    }
+	int	i;
+
+	i = 0;
+	while (line && line[i])
+	{
+		if (line[i] == '\n')
+			line[i] = ' ';
+		i++;
+	}
 }
 
 void	print_syntax_error(t_token *tokens)
 {
-	char *token = "newline";
+	char	*token;
+
+	token = "newline";
 	if (tokens)
 	{
 		if (tokens->type == T_PIPE || is_redir(tokens->type))
@@ -48,17 +52,19 @@ void	print_syntax_error(t_token *tokens)
 
 int	line_ends_with_pipe(const char *line)
 {
-    int i = strlen(line) - 1;
-    while (i >= 0 && line[i] == ' ')
-        i--;
-    return (i >= 0 && line[i] == '|');
+	int	i;
+
+	i = strlen(line) - 1;
+	while (i >= 0 && line[i] == ' ')
+		i--;
+	return (i >= 0 && line[i] == '|');
 }
 
 void	expand_vars_in_line(char **line, char **env)
 {
-    char	*expanded;
+	char	*expanded;
 
-    expanded = expand_vars(*line, env);
-    free(*line);
-    *line = expanded;
+	expanded = expand_vars(*line, env);
+	free(*line);
+	*line = expanded;
 }

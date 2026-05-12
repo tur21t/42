@@ -30,9 +30,9 @@ static char	*get_env_value(char **envp, char *name)
 
 static int	execve_exit_code_from_errno(int err)
 {
-    if (err == ENOENT)
-        return (127);
-    return (126);
+	if (err == ENOENT)
+		return (127);
+	return (126);
 }
 
 static char	*search_in_paths(char *cmd, char **paths)
@@ -72,52 +72,52 @@ static char	*find_executable(char *cmd, char **envp)
 
 /*int	exec_external_command(t_cmd *cmd, char **envp)
 {
-    pid_t	pid;
-    int		status;
-    char	*path;
+	pid_t	pid;
+	int		status;
+	char	*path;
 
-    status = 0;
-    if (!cmd || !cmd->args || !cmd->args[0])
-        return (-1);
-    path = find_executable(cmd->args[0], envp);
-    if (!path)
-    {
-        command_not_found(cmd->args[0]);
-        g_signal = 127;
-        return (127);
-    }
-    pid = fork();
-    if (pid == 0)
-    {
-        signal(SIGINT, SIG_DFL);
-        signal(SIGQUIT, SIG_DFL);
-        execve(path, cmd->args, envp);
-        perror("execve");
-        if (errno == EACCES)
-            exit(126);
-        exit(127);
-    }
-    else if (pid > 0)
-    {
-        waitpid(pid, &status, 0);
-        if (WIFEXITED(status))
-            g_signal = WEXITSTATUS(status);
-        else if (WIFSIGNALED(status))
-            g_signal = 128 + WTERMSIG(status);
-    }
-    else
-    {
-        perror("fork");
-        g_signal = 1;
-    }
-    free(path);
-    return (g_signal);
+	status = 0;
+	if (!cmd || !cmd->args || !cmd->args[0])
+		return (-1);
+	path = find_executable(cmd->args[0], envp);
+	if (!path)
+	{
+		command_not_found(cmd->args[0]);
+		g_signal = 127;
+		return (127);
+	}
+	pid = fork();
+	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		execve(path, cmd->args, envp);
+		perror("execve");
+		if (errno == EACCES)
+			exit(126);
+		exit(127);
+	}
+	else if (pid > 0)
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			g_signal = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			g_signal = 128 + WTERMSIG(status);
+	}
+	else
+	{
+		perror("fork");
+		g_signal = 1;
+	}
+	free(path);
+	return (g_signal);
 }*/
 
 int	exec_external_command(t_cmd *cmd, char **envp)
 {
-	char    *path;
-    int     err;
+	char	*path;
+	int		err;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (1);
@@ -130,11 +130,8 @@ int	exec_external_command(t_cmd *cmd, char **envp)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	execve(path, cmd->args, envp);
-    err = errno;
+	err = errno;
 	perror("execve");
 	free(path);
-    exit(execve_exit_code_from_errno(err));
-	//if (errno == EACCES)
-	//	return (126);
-	//return (127);
+	exit(execve_exit_code_from_errno(err));
 }

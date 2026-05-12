@@ -12,21 +12,26 @@
 
 #include "minishell.h"
 
-static int has_in_redir(t_redir *r) {
-	while (r) {
+static int	has_in_redir(t_redir *r)
+{
+	while (r)
+	{
 		if (r->type == T_REDIR_IN || r->type == T_HEREDOC)
-			return 1;
+			return (1);
 		r = r->next;
 	}
-	return 0;
+	return (0);
 }
-static int has_out_redir(t_redir *r) {
-	while (r) {
+
+static int	has_out_redir(t_redir *r)
+{
+	while (r)
+	{
 		if (r->type == T_REDIR_OUT || r->type == T_REDIR_APPEND)
-			return 1;
+			return (1);
 		r = r->next;
 	}
-	return 0;
+	return (0);
 }
 
 void	fork_and_exec(t_shell *shell, t_cmd *cmd, t_pipe *pipes)
@@ -62,7 +67,6 @@ void	fork_and_exec(t_shell *shell, t_cmd *cmd, t_pipe *pipes)
 			ret = exec_builtin(shell, cmd);
 		else
 			ret = exec_external_command(cmd, shell->env);
-		
 		free_shell(shell);
 		exit(ret);
 	}
@@ -83,8 +87,8 @@ void	wait_for_children(int n_cmds)
 		if (pid == -1)
 		{
 			if (errno == EINTR)
-				continue;
-			break;
+				continue ;
+			break ;
 		}
 		if (WIFEXITED(status))
 			g_signal = WEXITSTATUS(status);

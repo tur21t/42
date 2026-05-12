@@ -71,62 +71,62 @@ static void	add_var(char *name, char *value, char ***env)
 
 int	builtin_export(char **args, char ***env)
 {
-    int		i;
-    int		j;
-    int		found;
-    char	*eq;
-    char	*name;
-    char	*value;
-    char	*joined;
+	int		i;
+	int		j;
+	int		found;
+	char	*eq;
+	char	*name;
+	char	*value;
+	char	*joined;
 
-    i = 1;
-    while (args[i])
-    {
-        joined = NULL;
-        name = NULL;
-        value = NULL;
-        eq = ft_strchr(args[i], '=');
-        if (eq && eq[1] == '\0' && args[i + 1])
-        {
-            joined = ft_strjoin(args[i], args[i + 1]);
-            if (!joined)
-                return (1);
-            eq = ft_strchr(joined, '=');
-            name = ft_substr(joined, 0, eq - joined);
-            value = ft_strdup(eq + 1);
-            free(joined);
-            i += 2;
-        }
-        else if (eq)
-        {
-            name = ft_substr(args[i], 0, eq - args[i]);
-            value = ft_strdup(eq + 1);
-            i++;
-        }
-        else
-        {
-            i++;
-            continue ;
-        }
-        if (name && value)
-        {
-            found = 0;
-            j = 0;
-            while ((*env) && (*env)[j])
-            {
-                if (match_var((*env)[j], name))
-                {
-                    update_var(name, value, env);
-                    found = 1;
-                    break ;
-                }
-                j++;
-            }
-            if (!found)
-                add_var(name, value, env);
-        }
-        free(name);
-        free(value);
-    }
-    return (0);
+	i = 1;
+	while (args[i])
+	{
+		joined = NULL;
+		name = NULL;
+		value = NULL;
+		eq = ft_strchr(args[i], '=');
+		if (eq && eq[1] == '\0' && args[i + 1])
+		{
+			joined = ft_strjoin(args[i], args[i + 1]);
+			if (!joined)
+				return (1);
+			eq = ft_strchr(joined, '=');
+			name = ft_substr(joined, 0, eq - joined);
+			value = ft_strdup(eq + 1);
+			free(joined);
+			i += 2;
+		}
+		else if (eq)
+		{
+			name = ft_substr(args[i], 0, eq - args[i]);
+			value = ft_strdup(eq + 1);
+			i++;
+		}
+		else
+		{
+			i++;
+			continue ;
+		}
+		if (name && value)
+		{
+			found = 0;
+			j = 0;
+			while ((*env) && (*env)[j])
+			{
+				if (match_var((*env)[j], name))
+				{
+					update_var(name, value, env);
+					found = 1;
+					break ;
+				}
+				j++;
+			}
+			if (!found)
+				add_var(name, value, env);
+		}
+		free(name);
+		free(value);
+	}
+	return (0);
 }

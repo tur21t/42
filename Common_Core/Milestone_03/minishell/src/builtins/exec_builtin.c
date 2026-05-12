@@ -21,7 +21,6 @@ int	exec_builtin(t_shell *shell, t_cmd *cmd)
 		return (builtin_cd(cmd->args, &(shell->env)));
 	if (ft_strncmp(cmd->args[0], "echo", 5) == 0)
 	{
-		//expand_args(cmd->args, cmd->quotes, shell->env);
 		return (builtin_echo(cmd->args));
 	}
 	if (ft_strncmp(cmd->args[0], "env", 4) == 0)

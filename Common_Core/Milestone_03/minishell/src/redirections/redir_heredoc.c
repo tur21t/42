@@ -63,10 +63,12 @@ int	apply_heredoc_redir(t_redir *redir, t_shell *shell, int is_last)
 
 int	apply_heredoc_token(t_token *heredoc_token, t_shell *shell)
 {
-	char	*delimiter = heredoc_token->next->value;
-	int		quote = heredoc_token->next->quote;
+	char	*delimiter;
+	int		quote;
 	int		pipefd[2];
 
+	quote = heredoc_token->next->quote;
+	delimiter = heredoc_token->next->value;
 	if (pipe(pipefd) == -1)
 		return (-1);
 	if (heredoc_write(delimiter, pipefd[1], quote != 0, shell->env) == -1)

@@ -14,10 +14,10 @@
 
 static void	cleanup_iteration(t_token *tokens, t_cmd *cmds)
 {
-    if (cmds)
-        free_cmds(cmds);
-    if (tokens)
-        free_tokens(tokens);
+	if (cmds)
+		free_cmds(cmds);
+	if (tokens)
+		free_tokens(tokens);
 }
 
 /*static void	handle_input(char *input, t_shell *shell)
@@ -84,75 +84,73 @@ static void	cleanup_iteration(t_token *tokens, t_cmd *cmds)
 
 static void	handle_input(char *input, t_shell *shell)
 {
-    int		n_cmds;
-    t_token		*tokens;
-    t_cmd		*cmds;
-    t_token		*error_token;
-    int			redir_status;
-    int			ok;
+	int			n_cmds;
+	t_token		*tokens;
+	t_cmd		*cmds;
+	t_token		*error_token;
+	int			redir_status;
+	int			ok;
+	t_token		*tmp;
 
-    if (!input)
-        return ;
-    if (*input)
-        add_history(input);
-    tokens = lexer(input);
-    cmds = NULL;
-    error_token = NULL;
-    ok = (tokens != NULL);
-    if (ok)
-        expand_token_list(&tokens, shell->env);
-    if (ok)
-    {
-        redir_status = check_redir_syntax_before_heredoc(tokens, &error_token);
-        if (redir_status == 0)
-        {
-            ok = 0;
-            cleanup_iteration(tokens, cmds);
-            return ;
-        }
-        else if (redir_status == 2)
-        {
-            t_token	*tmp;
-
-            tmp = tokens;
-            while (tmp && tmp != error_token)
-            {
-                if (tmp->type == T_HEREDOC)
-                    apply_heredoc_token(tmp, shell);
-                tmp = tmp->next;
-            }
-            ok = 0;
-            cleanup_iteration(tokens, cmds);
-            return ;
-        }
-    }
-    if (ok)
-        ok = process_heredocs_and_check_syntax(tokens);
-    if (ok && !check_syntax(tokens))
-    {
-        printf("minishell: syntax error near unexpected token `newline'\n");
-        ok = 0;
+	if (!input)
+		return ;
+	if (*input)
+		add_history(input);
+	tokens = lexer(input);
+	cmds = NULL;
+	error_token = NULL;
+	ok = (tokens != NULL);
+	if (ok)
+		expand_token_list(&tokens, shell->env);
+	if (ok)
+	{
+		redir_status = check_redir_syntax_before_heredoc(tokens, &error_token);
+		if (redir_status == 0)
+		{
+			ok = 0;
+			cleanup_iteration(tokens, cmds);
+			return ;
+		}
+		else if (redir_status == 2)
+		{
+			tmp = tokens;
+			while (tmp && tmp != error_token)
+			{
+				if (tmp->type == T_HEREDOC)
+					apply_heredoc_token(tmp, shell);
+				tmp = tmp->next;
+			}
+			ok = 0;
+			cleanup_iteration(tokens, cmds);
+			return ;
+		}
+	}
+	if (ok)
+		ok = process_heredocs_and_check_syntax(tokens);
+	if (ok && !check_syntax(tokens))
+	{
+		printf("minishell: syntax error near unexpected token `newline'\n");
+		ok = 0;
 		cleanup_iteration(tokens, cmds);
 		return ;
-    }
-    if (ok)
-    {
-        cmds = parse_tokens(tokens);
-        if (cmds)
-        {
-            n_cmds = init_pipeline(cmds);
-            if (n_cmds == 1 && cmds->args && cmds->args[0]
-                && is_builtin(cmds->args[0]))
-                execute(shell, cmds);
-            else
-                execute_pipeline(shell, cmds, n_cmds);
+	}
+	if (ok)
+	{
+		cmds = parse_tokens(tokens);
+		if (cmds)
+		{
+			n_cmds = init_pipeline(cmds);
+			if (n_cmds == 1 && cmds->args && cmds->args[0]
+				&& is_builtin(cmds->args[0]))
+				execute(shell, cmds);
+			else
+				execute_pipeline(shell, cmds, n_cmds);
 			free_cmds(cmds);
 			cmds = NULL;
-        }
-    }
-    cleanup_iteration(tokens, cmds);
+		}
+	}
+	cleanup_iteration(tokens, cmds);
 }
-
 
 void	shell_loop(t_shell *shell)
 {
@@ -163,7 +161,6 @@ void	shell_loop(t_shell *shell)
 	int		skip_input;
 	char	*trimmed;
 
-	
 	while (1)
 	{
 		skip_input = 0;
@@ -172,7 +169,7 @@ void	shell_loop(t_shell *shell)
 		{
 			g_signal = 130;
 			free(input);
-			continue;
+			continue ;
 		}
 		if (!input)
 		{
@@ -183,7 +180,7 @@ void	shell_loop(t_shell *shell)
 		if (input[0] == '\0')
 		{
 			free(input);
-			continue;
+			continue ;
 		}
 		line = ft_strdup(input);
 		free(input);
@@ -192,23 +189,24 @@ void	shell_loop(t_shell *shell)
 			input = readline("> ");
 			if (!input)
 			{
-				if (quote) 
+				if (quote)
 				{
-					printf("minishell: unexpected EOF while looking for matching `%c'\n", quote);
+					printf("minishell: "
+						"unexpected EOF while looking for matching `%c'\n", quote);
 					printf("minishell: syntax error: unexpected end of file\n");
 					free(line);
 					skip_input = 1;
-					break;
-				} 
-				else 
+					break ;
+				}
+				else
 				{
-				printf("minishell: syntax error: unexpected end of file\n");
-				printf("exit\n");
-				free(line);
-				shell->last_exit = 2;
-				return ;
-				//cleanup_shell(shell, 1);
-				//exit(2);
+					printf("minishell: syntax error: unexpected end of file\n");
+					printf("exit\n");
+					free(line);
+					shell->last_exit = 2;
+					return ;
+					//cleanup_shell(shell, 1);
+					//exit(2);
 				}
 			}
 			tmp = ft_strjoin(line, "\n");
@@ -226,7 +224,7 @@ void	shell_loop(t_shell *shell)
 			if (!trimmed || trimmed[0] == '\0')
 			{
 				free(trimmed);
-				continue;
+				continue ;
 			}
 			handle_input(trimmed, shell);
 			free(trimmed);

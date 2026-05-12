@@ -14,16 +14,16 @@
 
 static int	is_n_option(const char *s)
 {
-    int	i;
+	int	i;
 
-    if (!s || s[0] != '-')
-        return (0);
-    i = 1;
-    if (s[i] != 'n')
-        return (0);
-    while (s[i] == 'n')
-        i++;
-    return (s[i] == '\0');
+	if (!s || s[0] != '-')
+		return (0);
+	i = 1;
+	if (s[i] != 'n')
+		return (0);
+	while (s[i] == 'n')
+		i++;
+	return (s[i] == '\0');
 }
 
 int	builtin_echo(char **args)
@@ -33,7 +33,7 @@ int	builtin_echo(char **args)
 
 	i = 1;
 	newline = 1;
-    while (args[i] && is_n_option(args[i]))
+	while (args[i] && is_n_option(args[i]))
 	{
 		newline = 0;
 		i++;

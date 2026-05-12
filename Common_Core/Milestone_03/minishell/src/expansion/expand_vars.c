@@ -49,107 +49,102 @@ static int	handle_var(const char *input, int *i, t_expand_ctx *ctx, char **env)
 
 /*char	*expand_vars(const char *input, char **env)
 {
-    char			*result;
-    int				i;
-    t_expand_ctx	ctx;
-    char			*code;
+	char			*result;
+	int				i;
+	t_expand_ctx	ctx;
+	char			*code;
 
-    result = malloc(4096);
-    if (!result)
-        return (NULL);
-    i = 0;
-    ctx.j = 0;
-    ctx.result = result;
-    while (input[i])
-    {
-        if (input[i] == '$' && input[i + 1] == '?')
-        {
-            code = ft_itoa(g_signal);
-            if (code)
-            {
-                ft_strlcpy(ctx.result + ctx.j, code, ft_strlen(code) + 1);
-                ctx.j += ft_strlen(code);
-                free(code);
-            }
-            i += 2;
-        }
-        else if (input[i] == '$'
-            && (ft_isalnum(input[i + 1]) || input[i + 1] == '_'))
-            handle_var(input, &i, &ctx, env);
-        else
-            result[ctx.j++] = input[i++];
-    }
-    result[ctx.j] = '\0';
-    return (result);
+	result = malloc(4096);
+	if (!result)
+		return (NULL);
+	i = 0;
+	ctx.j = 0;
+	ctx.result = result;
+	while (input[i])
+	{
+		if (input[i] == '$' && input[i + 1] == '?')
+		{
+			code = ft_itoa(g_signal);
+			if (code)
+			{
+				ft_strlcpy(ctx.result + ctx.j, code, ft_strlen(code) + 1);
+				ctx.j += ft_strlen(code);
+				free(code);
+			}
+			i += 2;
+		}
+		else if (input[i] == '$'
+			&& (ft_isalnum(input[i + 1]) || input[i + 1] == '_'))
+			handle_var(input, &i, &ctx, env);
+		else
+			result[ctx.j++] = input[i++];
+	}
+	result[ctx.j] = '\0';
+	return (result);
 }*/
 
 char	*expand_vars(const char *input, char **env)
 {
-    char			*result;
-    char			*final;
-    int				i;
-    t_expand_ctx	ctx;
-    char			*code;
+	char			*result;
+	char			*final;
+	int				i;
+	t_expand_ctx	ctx;
+	char			*code;
 
-    if (!input)
-        return (ft_strdup(""));
-    
-    result = malloc(4096);
-    if (!result)
-        return (ft_strdup(""));
-    
-    i = 0;
-    ctx.j = 0;
-    ctx.result = result;
-    
-    while (input[i])
-    {
-        if (input[i] == '$' && input[i + 1] == '?')
-        {
-            code = ft_itoa(g_signal);
-            if (code)
-            {
-                if (ctx.j + ft_strlen(code) < 4096)
-                {
-                    ft_strlcpy(ctx.result + ctx.j, code, 4096 - ctx.j);
-                    ctx.j += ft_strlen(code);
-                }
-                free(code);
-            }
-            i += 2;
-        }
-        else if (input[i] == '$'
-            && (ft_isalnum(input[i + 1]) || input[i + 1] == '_'))
-            handle_var(input, &i, &ctx, env);
-        else
-        {
-            if (ctx.j < 4095)
-                result[ctx.j++] = input[i++];
-            else
-                i++;
-        }
-    }
-    result[ctx.j] = '\0';
-    
-    // ✓ Duplica solo lo necesario y libera el buffer de 4KB
-    final = ft_strdup(result);
-    free(result);
-    return (final ? final : ft_strdup(""));
+	if (!input)
+		return (ft_strdup(""));
+	result = malloc(4096);
+	if (!result)
+		return (ft_strdup(""));
+	i = 0;
+	ctx.j = 0;
+	ctx.result = result;
+	while (input[i])
+	{
+		if (input[i] == '$' && input[i + 1] == '?')
+		{
+			code = ft_itoa(g_signal);
+			if (code)
+			{
+				if (ctx.j + ft_strlen(code) < 4096)
+				{
+					ft_strlcpy(ctx.result + ctx.j, code, 4096 - ctx.j);
+					ctx.j += ft_strlen(code);
+				}
+				free(code);
+			}
+			i += 2;
+		}
+		else if (input[i] == '$'
+			&& (ft_isalnum(input[i + 1]) || input[i + 1] == '_'))
+			handle_var(input, &i, &ctx, env);
+		else
+		{
+			if (ctx.j < 4095)
+				result[ctx.j++] = input[i++];
+			else
+				i++;
+		}
+	}
+	result[ctx.j] = '\0';
+	final = ft_strdup(result);
+	free(result);
+	return (final ? final : ft_strdup(""));
 }
 
 /*void expand_args(char **args, char *quotes, char **env)
 {
-    int i = 1;
-    char *expanded;
+	int i = 1;
+	char *expanded;
 
-    while (args && args[i])
-    {
-        if (quotes[i] != '\'') // Solo expande si NO es comilla simple
-        {
-            expanded = expand_vars(args[i], env);
-            free(args[i]);
-            args[i] = expanded;
-        }
-        i++;
-    }
+	while (args && args[i])
+	{
+		if (quotes[i] != '\'') // Solo expande si NO es comilla simple
+		{
+			expanded = expand_vars(args[i], env);
+			free(args[i]);
+			args[i] = expanded;
+		}
+		i++;
+	}
 }*/
