@@ -48,3 +48,60 @@ void	update_var(char *name, char *value, char ***env)
 		j++;
 	}
 }
+
+char	*build_env_entry(char *name, char *value)
+{
+	char	*new_entry;
+	size_t	name_len;
+	size_t	value_len;
+
+	name_len = ft_strlen(name);
+	value_len = ft_strlen(value);
+	new_entry = malloc(name_len + value_len + 2);
+	if (new_entry)
+	{
+		ft_strlcpy(new_entry, name, name_len + 1);
+		new_entry[name_len] = '=';
+		ft_strlcpy(new_entry + name_len + 1, value, value_len + 1);
+	}
+	return (new_entry);
+}
+
+void	copy_env(char **dst, char **src, int count)
+{
+	int	i;
+
+	i = 0;
+	while (i < count)
+	{
+		dst[i] = ft_strdup(src[i]);
+		i++;
+	}
+}
+
+void	add_var(char *name, char *value, char ***env)
+{
+	int		count;
+	int		i;
+	char	**new_env;
+	char	*new_entry;
+
+	count = 0;
+	i = 0;
+	while ((*env)[count])
+		count++;
+	new_env = malloc(sizeof(char *) * (count + 2));
+	if (!new_env)
+		return ;
+	copy_env(new_env, *env, count);
+	i = count;
+	new_entry = build_env_entry(name, value);
+	if (new_entry)
+	{
+		new_env[i] = new_entry;
+		i++;
+	}
+	new_env[i] = NULL;
+	free_envp(*env);
+	*env = new_env;
+}
