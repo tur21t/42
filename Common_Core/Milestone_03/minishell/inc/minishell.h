@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dfrincu <dfrincu@student.42barcelona.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/12 14:37:22 by dfrincu           #+#    #+#             */
-/*   Updated: 2026/05/12 14:37:24 by dfrincu          ###   ########.fr       */
+/*   Created: 2026/03/03 11:04:59 by dfrincu           #+#    #+#             */
+/*   Updated: 2026/03/03 11:12:02 by dfrincu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,21 @@
 
 /* ===================== LIBRARIES ===================== */
 
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdbool.h>
-#include <fcntl.h>
-#include <signal.h>
-#include <dirent.h>
-#include <sys/wait.h>
-#include <sys/stat.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include "../libft/libft.h"
-#include <limits.h> 
+# include <stdio.h>
+# include <string.h>
+# include <errno.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <stdbool.h>
+# include <fcntl.h>
+# include <signal.h>
+# include <dirent.h>
+# include <sys/wait.h>
+# include <sys/stat.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include "../libft/libft.h"
+# include <limits.h> 
 
 /* ===================== GLOBAL ===================== */
 
@@ -58,6 +58,15 @@ typedef struct s_token
 	char				quote;
 	struct s_token		*next;
 }	t_token;
+
+typedef struct s_lex_sub
+{
+	t_token		**tokens;
+	const char	*input;
+	int			start;
+	int			end;
+	char		quote;
+}	t_lex_sub;
 
 typedef struct s_redir
 {
@@ -125,6 +134,9 @@ void	free_tokens(t_token *tokens);
 char	*remove_quotes_and_detect(const char *str, char *quote_type);
 int		get_word_end(char *input, int i);
 char	get_unclosed_quote(const char *input);
+void	add_token_from_substr(t_lex_sub *s);
+void	add_sub(t_token **toks, const char *in, int st, int en);
+void	add_sub_q(t_token **toks, const char *in, int st, int en);
 /* ===================== PARSER ===================== */
 
 t_cmd	*parse_tokens(t_token *tokens);
@@ -137,12 +149,16 @@ void	print_cmds(t_cmd *cmds);
 void	free_redirs(t_redir *redir);
 int		check_syntax(t_token *tokens);
 int		process_heredocs_and_check_syntax(t_token *tokens);
-int		check_redir_syntax_before_heredoc(t_token *tokens, t_token **error_token);
+int		check_redir_syntax_before_heredoc(
+			t_token *tokens, t_token **error_token);
 
 /* ===================== EXECUTOR ===================== */
 
 void	execute(t_shell *shell, t_cmd *cmds);
 int		exec_external_command(t_cmd *cmd, char **envp);
+int		has_in_redir(t_redir *r);
+int		has_out_redir(t_redir *r);
+void	handle_child_status(int status, int *printed_sigint);
 
 /* ===================== BUILTINS ===================== */
 
@@ -168,6 +184,8 @@ void	update_or_add_var(char *name, char *value, char ***env);
 
 void	expand_token_list(t_token **tokens, char **env);
 char	*expand_vars(const char *input, char **env);
+void	expand_vars_loop(const char *input, t_expand_ctx *ctx, char **env);
+int		handle_var(const char *input, int *i, t_expand_ctx *ctx, char **env);
 //void expand_args(char **args, char *quotes, char **env); 
 
 /* ===================== UTILS ===================== */

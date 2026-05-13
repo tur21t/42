@@ -12,15 +12,23 @@
 
 #include "minishell.h"
 
-// Helper: add a token for a substring with quote context
-static void	add_token_from_substr(
-	t_token **tokens, const char *input, int start, int end, char quote)
+static int	lex_consume_quote(t_token **toks, char *in, int i, int *start)
 {
-	char	*substr;
+	char	quote;
+	int		qstart;
 
-	substr = ft_substr(input, start, end - start);
-	add_token(tokens, substr, T_WORD, quote);
-	free(substr);
+	if (i > *start)
+		add_sub(toks, in, *start, i);
+	quote = in[i];
+	i++;
+	qstart = i;
+	while (in[i] && in[i] != quote)
+		i++;
+	add_sub_q(toks, in, qstart, i);
+	if (in[i] == quote)
+		i++;
+	*start = i;
+	return (i);
 }
 
 int	handle_redir(t_token **tokens, char *input, int i)
@@ -49,7 +57,7 @@ int	handle_redir(t_token **tokens, char *input, int i)
 }
 
 // Main word handler: splits at quote boundaries
-int	handle_word(t_token **tokens, char *input, int i)
+/*int	handle_word(t_token **tokens, char *input, int i)
 {
 	int		start;
 	char	quote;
@@ -61,14 +69,13 @@ int	handle_word(t_token **tokens, char *input, int i)
 	{
 		if (input[i] == '\'' || input[i] == '"')
 		{
-			// Add any preceding unquoted part
 			if (i > start)
-				add_token_from_substr(tokens, input, start, i, 0);
+				add_sub(tokens, input, start, i);
 			quote = input[i++];
 			qstart = i;
 			while (input[i] && input[i] != quote)
 				i++;
-			add_token_from_substr(tokens, input, qstart, i, quote);
+			add_sub_q(tokens, input, qstart, i);
 			if (input[i] == quote)
 				i++;
 			start = i;
@@ -76,9 +83,26 @@ int	handle_word(t_token **tokens, char *input, int i)
 		else
 			i++;
 	}
-	// Add any trailing unquoted part
 	if (i > start)
-		add_token_from_substr(tokens, input, start, i, 0);
+		add_sub(tokens, input, start, i);
+	return (i);
+}*/
+
+int	handle_word(t_token **tokens, char *input, int i)
+{
+	int	start;
+
+	start = i;
+	while (input[i] && input[i] != ' ' && input[i] != '\t'
+		&& input[i] != '|' && input[i] != '<' && input[i] != '>')
+	{
+		if (input[i] == '\'' || input[i] == '"')
+			i = lex_consume_quote(tokens, input, i, &start);
+		else
+			i++;
+	}
+	if (i > start)
+		add_sub(tokens, input, start, i);
 	return (i);
 }
 
@@ -127,17 +151,4 @@ void	add_token(t_token **tokens, char *value, t_token_type type, char quote)
 	while (last->next)
 		last = last->next;
 	last->next = new;
-}
-
-void	free_tokens(t_token *tokens)
-{
-	t_token	*tmp;
-
-	while (tokens)
-	{
-		tmp = tokens->next;
-		free(tokens->value);
-		free(tokens);
-		tokens = tmp;
-	}
 }
