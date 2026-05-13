@@ -71,3 +71,40 @@ void	add_redir(t_cmd *cmd, t_token *redir_token, t_token *file_token)
 		tmp->next = redir;
 	}
 }
+
+void	free_redirs(t_redir *redir)
+{
+	t_redir	*tmp;
+
+	while (redir)
+	{
+		tmp = redir->next;
+		free(redir->file);
+		free(redir);
+		redir = tmp;
+	}
+}
+
+void	free_cmds(t_cmd *cmds)
+{
+	t_cmd	*tmp;
+	int		i;
+
+	while (cmds)
+	{
+		tmp = cmds->next;
+		if (cmds->args)
+		{
+			i = 0;
+			while (cmds->args[i])
+			{
+				free(cmds->args[i]);
+				i++;
+			}
+			free(cmds->args);
+		}
+		free_redirs(cmds->redirs);
+		free(cmds);
+		cmds = tmp;
+	}
+}

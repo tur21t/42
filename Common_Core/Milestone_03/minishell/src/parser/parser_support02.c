@@ -35,42 +35,42 @@ void	print_cmds(t_cmd *cmds)
 	}
 }
 
-void	free_redirs(t_redir *redir)
-{
-	t_redir	*tmp;
+// void	free_redirs(t_redir *redir)
+// {
+// 	t_redir	*tmp;
 
-	while (redir)
-	{
-		tmp = redir->next;
-		free(redir->file);
-		free(redir);
-		redir = tmp;
-	}
-}
+// 	while (redir)
+// 	{
+// 		tmp = redir->next;
+// 		free(redir->file);
+// 		free(redir);
+// 		redir = tmp;
+// 	}
+// }
 
-void	free_cmds(t_cmd *cmds)
-{
-	t_cmd	*tmp;
-	int		i;
+// void	free_cmds(t_cmd *cmds)
+// {
+// 	t_cmd	*tmp;
+// 	int		i;
 
-	while (cmds)
-	{
-		tmp = cmds->next;
-		if (cmds->args)
-		{
-			i = 0;
-			while (cmds->args[i])
-			{
-				free(cmds->args[i]);
-				i++;
-			}
-			free(cmds->args);
-		}
-		free_redirs(cmds->redirs);
-		free(cmds);
-		cmds = tmp;
-	}
-}
+// 	while (cmds)
+// 	{
+// 		tmp = cmds->next;
+// 		if (cmds->args)
+// 		{
+// 			i = 0;
+// 			while (cmds->args[i])
+// 			{
+// 				free(cmds->args[i]);
+// 				i++;
+// 			}
+// 			free(cmds->args);
+// 		}
+// 		free_redirs(cmds->redirs);
+// 		free(cmds);
+// 		cmds = tmp;
+// 	}
+// }
 
 int	check_syntax(t_token *tokens)
 {
@@ -119,6 +119,17 @@ int	process_heredocs_and_check_syntax(t_token *tokens)
 	return (1);
 }
 
+static int	redir_syntax_error(t_token *err, t_token **error_token, int newline)
+{
+	if (newline)
+		printf("minishell: syntax error near unexpected token `newline'\n");
+	else
+		printf("minishell: "
+			"syntax error near unexpected token `%s'\n", err->value);
+	*error_token = err;
+	return (2);
+}
+
 int	check_redir_syntax_before_heredoc(t_token *tokens, t_token **error_token)
 {
 	t_token	*tmp;
@@ -129,19 +140,9 @@ int	check_redir_syntax_before_heredoc(t_token *tokens, t_token **error_token)
 		if (is_redir(tmp->type))
 		{
 			if (!tmp->next)
-			{
-				printf("minishell: syntax error near "
-					"unexpected token `newline'\n");
-				*error_token = tmp;
-				return (2);
-			}
+				return (redir_syntax_error(tmp, error_token, 1));
 			if (is_redir(tmp->next->type))
-			{
-				printf("minishell: syntax error near"
-					" unexpected token `%s'\n", tmp->next->value);
-				*error_token = tmp->next;
-				return (2);
-			}
+				return (redir_syntax_error(tmp->next, error_token, 0));
 		}
 		tmp = tmp->next;
 	}
