@@ -157,6 +157,12 @@ int		exec_builtin(t_shell *shell, t_cmd *cmd);
 int		is_builtin(char *cmd);
 int		match_var(const char *env_entry, const char *name);
 void	update_var(char *name, char *value, char ***env);
+char	*build_env_entry(char *name, char *value);
+void	copy_env(char **dst, char **src, int count);
+void	add_var(char *name, char *value, char ***env);
+int		handle_joined_arg(char **args, int *i, char **name, char **value);
+void	handle_simple_arg(char *arg, char **name, char **value);
+void	update_or_add_var(char *name, char *value, char ***env);
 
 /* ===================== EXPANSION ===================== */
 
