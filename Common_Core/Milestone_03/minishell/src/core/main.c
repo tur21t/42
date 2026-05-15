@@ -23,10 +23,8 @@ int	main(int argc, char **argv, char **envp)
 	init_shell(&shell, envp);
 	init_signals();
 	shell_loop(&shell);
-	//free_shell(&shell);
 	cleanup_shell(&shell, 1);
 	rl_cleanup_after_signal();
 	rl_deprep_terminal();
-	//return (0);
 	return (shell.last_exit);
 }

@@ -56,3 +56,14 @@ void	expand_vars_loop(const char *input, t_expand_ctx *ctx, char **env)
 	}
 	ctx->result[ctx->j] = '\0';
 }
+
+void	init_split_ctx(t_split_ctx *ctx, t_token *curr)
+{
+	ctx->orig = curr->value;
+	ctx->orig_next = curr->next;
+	ctx->i = 0;
+	ctx->first = 1;
+	ctx->replaced = 0;
+	ctx->tail = curr;
+	ctx->ok = 1;
+}

@@ -82,7 +82,7 @@ int	process_heredocs_and_check_syntax(t_token *tokens)
 	return (1);
 }
 
-static int	redir_syntax_error(t_token *err, t_token **error_token, int newline)
+int	redir_syntax_error(t_token *err, t_token **error_token, int newline)
 {
 	if (newline)
 		printf("minishell: syntax error near unexpected token `newline'\n");

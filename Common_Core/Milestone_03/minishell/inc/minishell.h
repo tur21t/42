@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#define _XOPEN_SOURCE 700
 #ifndef MINISHELL_H
+# define _XOPEN_SOURCE 700
 # define MINISHELL_H
 
 /* ===================== LIBRARIES ===================== */
@@ -58,6 +58,18 @@ typedef struct s_token
 	char				quote;
 	struct s_token		*next;
 }	t_token;
+
+typedef struct s_split_ctx
+{
+	char	*orig;
+	t_token	*orig_next;
+	int		i;
+	int		start;
+	int		first;
+	int		replaced;
+	t_token	*tail;
+	int		ok;
+}	t_split_ctx;
 
 typedef struct s_lex_sub
 {
@@ -119,6 +131,10 @@ int		init_pipeline(t_cmd *cmds);
 /* ===================== LOOP ===================== */
 
 void	shell_loop(t_shell *shell);
+void	handle_input(char *input, t_shell *shell);
+void	cleanup_iteration(t_token *tokens, t_cmd *cmds);
+int		handle_multiline_eof(char **line, char quote, t_shell *shell);
+char	*get_user_input(void);
 
 /* ===================== SIGNALS ===================== */
 
@@ -149,6 +165,7 @@ void	print_cmds(t_cmd *cmds);
 void	free_redirs(t_redir *redir);
 int		check_syntax(t_token *tokens);
 int		process_heredocs_and_check_syntax(t_token *tokens);
+int		redir_syntax_error(t_token *err, t_token **error_token, int newline);
 int		check_redir_syntax_before_heredoc(
 			t_token *tokens, t_token **error_token);
 
@@ -186,6 +203,13 @@ void	expand_token_list(t_token **tokens, char **env);
 char	*expand_vars(const char *input, char **env);
 void	expand_vars_loop(const char *input, t_expand_ctx *ctx, char **env);
 int		handle_var(const char *input, int *i, t_expand_ctx *ctx, char **env);
+void	free_token_chain(t_token *t);
+t_token	*new_word_token_take(char *value, t_token *next);
+int		is_surrounded_by_single_quotes(const char *str);
+int		is_ws(char c);
+void	delete_token(t_token **head, t_token *curr, t_token *prev);
+int		split_token_words(t_token **head, t_token *curr, t_token *prev);
+void	init_split_ctx(t_split_ctx *ctx, t_token *curr);
 //void expand_args(char **args, char *quotes, char **env); 
 
 /* ===================== UTILS ===================== */

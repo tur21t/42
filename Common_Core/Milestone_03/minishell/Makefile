@@ -6,15 +6,15 @@ RM = rm -f
 LIBFT_DIR	= ./libft
 LIBFT_A		= $(LIBFT_DIR)/libft.a
 
-SRCS        = src/core/main.c src/core/loop.c \
+SRCS        = src/core/main.c src/core/loop.c src/core/loop_handle_input.c src/core/loop_utils.c \
 			  src/signals/signals.c \
 			  src/lexer/lexer.c src/lexer/lexer_support.c src/lexer/lexer_support02.c\
 			  src/init/tubs.c src/init/init_pipeline.c \
 			  src/parser/parser.c src/parser/parser_support.c src/parser/parser_support02.c \
 			  src/exec/exec.c src/exec/exec_external_commands.c src/exec/exec_pipeline.c src/exec/exec_fork.c src/exec/exec_fork_utils.c \
-			  src/expansion/expand_vars.c src/expansion/expand_utils.c src/expansion/expand_vars_utils.c \
+			  src/expansion/expand_vars.c src/expansion/expand_utils.c src/expansion/expand_vars_utils.c src/expansion/expand_token_list.c src/expansion/split_token_words.c\
 			  src/utils/free.c src/utils/errors.c \
-			  src/builtins/exec_builtin.c src/builtins/builtin_cd.c src/builtins/echo.c src/builtins/builtin_env.c src/builtins/exit.c src/builtins/builtin_export.c src/builtins/builtin_export_utils.c src/builtins/builtin_export_utils_02.c src/builtins/pwd.c src/builtins/builtin_unset.c \
+			  src/builtins/exec_builtin.c src/builtins/builtin_cd.c src/builtins/echo.c src/builtins/builtin_env.c src/builtins/exit.c src/builtins/builtin_export.c src/builtins/builtin_export_utils.c src/builtins/builtin_export_utils_02.c src/builtins/pwd.c src/builtins/builtin_unset.c\
 			  src/redirections/redir.c src/redirections/redir_utils.c src/redirections/redir_heredoc.c \
 
 OBJS        = $(SRCS:.c=.o)
