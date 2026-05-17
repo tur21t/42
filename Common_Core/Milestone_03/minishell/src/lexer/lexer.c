@@ -56,38 +56,6 @@ int	handle_redir(t_token **tokens, char *input, int i)
 	return (i);
 }
 
-// Main word handler: splits at quote boundaries
-/*int	handle_word(t_token **tokens, char *input, int i)
-{
-	int		start;
-	char	quote;
-	int		qstart;
-
-	start = i;
-	while (input[i] && input[i] != ' ' && input[i] != '\t'
-		&& input[i] != '|' && input[i] != '<' && input[i] != '>')
-	{
-		if (input[i] == '\'' || input[i] == '"')
-		{
-			if (i > start)
-				add_sub(tokens, input, start, i);
-			quote = input[i++];
-			qstart = i;
-			while (input[i] && input[i] != quote)
-				i++;
-			add_sub_q(tokens, input, qstart, i);
-			if (input[i] == quote)
-				i++;
-			start = i;
-		}
-		else
-			i++;
-	}
-	if (i > start)
-		add_sub(tokens, input, start, i);
-	return (i);
-}*/
-
 int	handle_word(t_token **tokens, char *input, int i)
 {
 	int	start;

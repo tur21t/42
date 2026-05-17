@@ -12,14 +12,6 @@
 
 #include "minishell.h"
 
-// int	match_var(const char *env_entry, const char *name)
-// {
-// 	size_t	len;
-
-// 	len = ft_strlen(name);
-// 	return (ft_strncmp(env_entry, name, len) == 0 && env_entry[len] == '=');
-// }
-
 static void	remove_var(char *name, char ***env)
 {
 	int	j;

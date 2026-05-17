@@ -12,11 +12,11 @@
 
 #include "minishell.h"
 
-void	cleanup_iteration(t_token *tokens, t_cmd *cmds)
+void	cleanup_iteration(t_token **tokens, t_cmd *cmds)
 {
 	if (cmds)
 		free_cmds(cmds);
-	if (tokens)
+	if (tokens && *tokens)
 		free_tokens(tokens);
 }
 

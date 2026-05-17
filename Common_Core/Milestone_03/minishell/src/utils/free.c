@@ -62,15 +62,18 @@ void	free_envp(char **env)
 	free(env);
 }
 
-void	free_tokens(t_token *tokens)
+void	free_tokens(t_token **tokens)
 {
 	t_token	*tmp;
+	t_token	*cur;
 
-	while (tokens)
+	cur = *tokens;
+	while (cur)
 	{
-		tmp = tokens->next;
-		free(tokens->value);
-		free(tokens);
-		tokens = tmp;
+		tmp = cur->next;
+		free(cur->value);
+		free(cur);
+		cur = tmp;
 	}
+	*tokens = NULL;
 }

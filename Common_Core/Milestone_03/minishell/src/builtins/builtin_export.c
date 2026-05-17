@@ -12,6 +12,24 @@
 
 #include "minishell.h"
 
+static void	print_export_env(char **env)
+{
+	int		i;
+	char	*eq;
+
+	i = 0;
+	while (env && env[i])
+	{
+		eq = ft_strchr(env[i], '=');
+		printf("declare -x ");
+		if (eq)
+			printf("%.*s=\"%s\"\n", (int)(eq - env[i]), env[i], eq + 1);
+		else
+			printf("%s\n", env[i]);
+		i++;
+	}
+}
+
 static int	get_export_name_value(
 	char **args,
 	int *i,
@@ -64,6 +82,11 @@ int	builtin_export(char **args, char ***env)
 
 	i = 1;
 	ret = 0;
+	if (!args[1])
+	{
+		print_export_env(*env);
+		return (0);
+	}
 	while (args[i])
 	{
 		ret = process_export_argument(args, &i, env);

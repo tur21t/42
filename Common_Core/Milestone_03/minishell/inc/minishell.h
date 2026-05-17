@@ -132,7 +132,7 @@ int		init_pipeline(t_cmd *cmds);
 
 void	shell_loop(t_shell *shell);
 void	handle_input(char *input, t_shell *shell);
-void	cleanup_iteration(t_token *tokens, t_cmd *cmds);
+void	cleanup_iteration(t_token **tokens, t_cmd *cmds);
 int		handle_multiline_eof(char **line, char quote, t_shell *shell);
 char	*get_user_input(void);
 
@@ -146,7 +146,7 @@ t_token	*lexer(char *input);
 int		handle_redir(t_token **tokens, char *input, int i);
 int		handle_word(t_token **tokens, char *input, int i);
 void	add_token(t_token **list, char *value, t_token_type type, char quote);
-void	free_tokens(t_token *tokens);
+void	free_tokens(t_token **tokens);
 char	*remove_quotes_and_detect(const char *str, char *quote_type);
 int		get_word_end(char *input, int i);
 char	get_unclosed_quote(const char *input);

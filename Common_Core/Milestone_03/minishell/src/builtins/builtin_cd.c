@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-//#include <unistd.h>
-//#include <stdio.h>
 
 static char	*get_env_value(char **env, char *name)
 {
@@ -35,9 +33,11 @@ int	builtin_cd(char **args, char ***env)
 	char	oldpwd[PATH_MAX];
 	char	*target;
 	char	*home;
+	int		have_oldpwd;
 
-	if (!getcwd(oldpwd, sizeof(oldpwd)))
-		return (perror("cd"), 1);
+	have_oldpwd = 0;
+	if (getcwd(oldpwd, sizeof(oldpwd)))
+		have_oldpwd = 1;
 	if (args[1])
 		target = args[1];
 	else
@@ -49,7 +49,8 @@ int	builtin_cd(char **args, char ***env)
 	}
 	if (chdir(target) != 0)
 		return (perror("cd"), 1);
-	builtin_export((char *[]){"export", "OLDPWD", oldpwd, NULL}, env);
+	if (have_oldpwd)
+		builtin_export((char *[]){"export", "OLDPWD", oldpwd, NULL}, env);
 	if (getcwd(oldpwd, sizeof(oldpwd)))
 		builtin_export((char *[]){"export", "PWD", oldpwd, NULL}, env);
 	return (0);

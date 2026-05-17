@@ -29,12 +29,12 @@ static void	parse_and_execute(t_token *tokens, t_shell *shell)
 }
 
 static int	handle_redir_before_heredoc(
-	t_token *tokens, t_cmd *cmds, t_token **error_token, t_shell *shell)
+	t_token **tokens, t_cmd *cmds, t_token **error_token, t_shell *shell)
 {
 	int		redir_status;
 	t_token	*tmp;
 
-	redir_status = check_redir_syntax_before_heredoc(tokens, error_token);
+	redir_status = check_redir_syntax_before_heredoc(*tokens, error_token);
 	if (redir_status == 0)
 	{
 		cleanup_iteration(tokens, cmds);
@@ -42,7 +42,7 @@ static int	handle_redir_before_heredoc(
 	}
 	else if (redir_status == 2)
 	{
-		tmp = tokens;
+		tmp = *tokens;
 		while (tmp && tmp != *error_token)
 		{
 			if (tmp->type == T_HEREDOC)
@@ -56,15 +56,15 @@ static int	handle_redir_before_heredoc(
 }
 
 static int	handle_heredocs_and_syntax(
-	t_token *tokens, t_cmd *cmds, t_shell *shell)
+	t_token **tokens, t_cmd *cmds, t_shell *shell)
 {
 	(void)shell;
-	if (!process_heredocs_and_check_syntax(tokens))
+	if (!process_heredocs_and_check_syntax(*tokens))
 	{
 		cleanup_iteration(tokens, cmds);
 		return (0);
 	}
-	if (!check_syntax(tokens))
+	if (!check_syntax(*tokens))
 	{
 		printf("minishell: syntax error near unexpected token `newline'\n");
 		cleanup_iteration(tokens, cmds);
@@ -91,10 +91,10 @@ void	handle_input(char *input, t_shell *shell)
 	if (ok)
 		expand_token_list(&tokens, shell->env);
 	if (ok)
-		ok = handle_redir_before_heredoc(tokens, cmds, &error_token, shell);
+		ok = handle_redir_before_heredoc(&tokens, cmds, &error_token, shell);
 	if (ok)
-		ok = handle_heredocs_and_syntax(tokens, cmds, shell);
+		ok = handle_heredocs_and_syntax(&tokens, cmds, shell);
 	if (ok)
 		parse_and_execute(tokens, shell);
-	cleanup_iteration(tokens, cmds);
+	cleanup_iteration(&tokens, cmds);
 }
