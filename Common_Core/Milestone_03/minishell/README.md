@@ -25,7 +25,7 @@ After compilation, run the shell with:
 ```sh
 ./minishell
 ```
-
+To make sure built-ins are working, we can use `env -i ./minishell` to enter the program without the $PATH variable and make the tests.
 ### Features
 - Built-in commands: `cd`, `echo`, `env`, `exit`, `export`, `pwd`, `unset`
 - Execution of external commands found in `$PATH`
